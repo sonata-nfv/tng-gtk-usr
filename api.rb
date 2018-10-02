@@ -5,10 +5,11 @@ require 'json'
 require 'jwt'
 
 db_params = {
+#  host: 'son-postgres',
   host: 'localhost',
-  dbname: 'tango',
-  user: 'tango',
-  password: 'tango'
+  dbname: 'gatekeeper',
+  user: 'sonatatest',
+  password: 'sonata'
 }
 
 
@@ -124,6 +125,44 @@ end
 
 
 
+  post '/get_role_endpoint' do
+      role = ""
+	ep = ""
+      puts "#{params[:token]}"
+      decoded_token = JWT.decode("#{params[:token]}", SECRET)
+
+      decoded = decoded_token.to_json
+
+      parsed = JSON.parse (decoded)
+
+      email = parsed[0]['email']
+      puts email
+
+	params[:email] = email
+       puts #{params[:email]}
+
+	    psql = PG::Connection.new(db_params)
+	    psql.exec( "SELECT ENDPOINT FROM ROLES WHERE ROLE IN (SELECT ROLE FROM USERS WHERE EMAIL='#{params[:email]}')" ) do |result|
+		  result.each do |row|
+	          puts "%s" %
+		  role = role + row.to_json
+	        end
+	end
+		if role != ""
+			role.to_json
+		else
+			msg="unregistered user"
+			msg.to_json
+		end
+
+
+
+	
+  end
+
+
+
+
 
 get '/get_all' do
   all = ""
@@ -134,6 +173,24 @@ get '/get_all' do
   result.each do |row|
     puts " %s | %s | %s " %
       row.values_at('name', 'email', 'role')
+      all = all + "" + row.to_json
+  end
+     
+  end
+    all.to_json
+   
+end
+
+
+get '/get_all_roles' do
+  all = ""
+  psql = PG::Connection.new(db_params)
+ psql.exec( "SELECT * FROM ROLES" ) do |result|
+  puts "role | endpoint"
+  
+  result.each do |row|
+    puts " %s | %s " %
+      row.values_at('role', 'eendpoint')
       all = all + "" + row.to_json
   end
      

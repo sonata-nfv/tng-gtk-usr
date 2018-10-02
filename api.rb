@@ -5,8 +5,8 @@ require 'json'
 require 'jwt'
 
 db_params = {
-#  host: 'son-postgres',
-  host: 'localhost',
+  host: 'son-postgres',
+#  host: 'localhost',
   dbname: 'gatekeeper',
   user: 'sonatatest',
   password: 'sonata'

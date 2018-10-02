@@ -12,17 +12,23 @@ This si designed to be used with dockers. Using the Dockerfile you can build and
 
 Once done, you will have the api available at http://tng-gtk-usr:4567 with this endpoints:
 
-/register: for the creation of new users
+## /register: 
+For the creation of new users
 
-/login: login into the SP portal. This will create a token.
+## /login: 
+Login into the 5GTano Portal. This will create a token.
 
-/get_role: It will use the token, decode it and will give you the role for the selected user.
+## /get_role: 
+It will use the token, decode it and will give you the role for the selected user.
 
-/get_role_enpoint: It will use the token, decode it and will give you the list of endpoints available for the selected user.
+## /get_role_enpoint: 
+It will use the token, decode it and will give you the list of endpoints available for the selected user.
 
-/get_all: This will give you a list of all the users.
+## /get_all: 
+This will give you a list of all the users.
 
-/get_all_roles: This will give you a list of all the roles and endpoints available for the users.
+## /get_all_roles: 
+This will give you a list of all the roles and endpoints available for the users.
 
 
 

@@ -12,23 +12,50 @@ This si designed to be used with dockers. Using the Dockerfile you can build and
 
 Once done, you will have the api available at http://tng-gtk-usr:4567 with this endpoints:
 
-## /register: 
-For the creation of new users
+## /users: 
+GET
+	This will give you a list of all the users.
+POST
+	You will create a new user. You need this info:
+		- Name
+		- Email (this must be unique)
+		- Password
+		- Role
+		- Status
+
+## /users/:email
+GET
+	This will give you the information about this user
 
 ## /login: 
-Login into the 5GTano Portal. This will create a token.
+POST
+	Login into the 5GTano Portal. This will create an user token.
 
-## /get_role: 
-It will use the token, decode it and will give you the role for the selected user.
+## /users/:email/role: 
+GET
+	This will give you the role for the selected user. You need an admin token to access this info.
 
-## /get_role_enpoint: 
-It will use the token, decode it and will give you the list of endpoints available for the selected user.
+POST
+	Here you can change the status of the user account. You need an admin token to change this info.
 
-## /get_all: 
-This will give you a list of all the users.
+## /users/:email/status
+GET
+	This will give you the status for the selected user. You need an admin token to access this info.
+POST 
+       Here you can change the status of the user account. You need an admin token to change this info.<
 
-## /get_all_roles: 
-This will give you a list of all the roles and endpoints available for the users.
+## /users/:email/change_user_password
+POST 
+       Here you can change the password of the user account. You need an admin token to change this info.
+
+## /users/:email/get_role_endpoints
+GET
+	This will give you the status for the selected user. You need an admin token to access this info.
+
+## /users/roles/get_all
+GET
+	This will give you a list of all the roles and endpoints available for the users.
+
 
 
 

@@ -5,8 +5,8 @@ require 'json'
 require 'jwt'
 
 db_params = {
-  host: 'son-postgres',
-#  host: 'localhost',
+#  host: 'son-postgres',
+  host: '172.18.0.2',
   dbname: 'gatekeeper',
   user: 'sonatatest',
   password: 'sonata'
@@ -24,11 +24,12 @@ SECRET = 'my_secret'
 	erb :users
   end
 
-  post '/register' do
+  post '/users' do
 	puts "#{params[:name]}"
 	puts "#{params[:email]}"
 	puts "#{params[:password]}"
 	puts "#{params[:role]}"
+        puts "#{params[:status]}"
 
     old_role = ""
    puts "#{params[:email]}"
@@ -44,17 +45,10 @@ end
 		msg="this user is already registered"
 		msg.to_json
 	else
-		psql.exec( "INSERT INTO USERS (NAME, PASSWORD, EMAIL, ROLE) VALUES ('#{params[:name]}', '#{params[:password]}', '#{params[:email]}', '#{params[:role]}')" )
+		psql.exec( "INSERT INTO USERS (NAME, PASSWORD, EMAIL, ROLE, STATUS) VALUES ('#{params[:name]}', '#{params[:password]}', '#{params[:email]}', '#{params[:role]}', '#{params[:status]}')" )
 		msg="user registered"
 		msg.to_json
-
-
 	end
-
-	
-
-	
-	
   end
 
 
@@ -85,12 +79,42 @@ end
 	end
   end
 
+get '/userses/:test' do
+	"hola #{params[:test]}"
+end
 
 
-  post '/get_role' do
-      role = ""
-      puts "#{params[:token]}"
-      decoded_token = JWT.decode("#{params[:token]}", SECRET)
+  get '/users/:email' do
+	role = ""
+	puts "this is the email"
+	puts "#{params[:email]}"
+	
+
+    psql = PG::Connection.new(db_params)
+    psql.exec( "SELECT * FROM USERS WHERE EMAIL='#{params[:email]}'" ) do |result|
+	  puts "user | email    | role"
+	  result.each do |row|
+          	puts " %s " %
+		  role = role + "" + row.to_json
+		  puts 'cosassss'
+        	end
+	end
+	if role != ""
+		role.to_json
+
+	else
+		msg="unregistered user for checking"
+		msg.to_json
+	end
+  end
+
+
+
+  get '/users/:email/role' do
+	  role = ""
+	  puts "This is the token"	  
+	  puts request.env["HTTP_TOKEN"]
+      decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
 
       decoded = decoded_token.to_json
 
@@ -106,30 +130,191 @@ end
 	    psql.exec( "SELECT ROLE FROM USERS WHERE EMAIL='#{params[:email]}'" ) do |result|
 		  result.each do |row|
 	          puts " %s " %
-		  role = role + "" + row.to_json
+		  role = row
 	        end
 	end
 		if role != ""
-                        parsed_role = JSON.parse (role)
-			role2 = parsed_role['role']
-			role2.to_json
+			return role.to_json
 		else
 			msg="unregistered user"
 			msg.to_json
-	end
-
-
-
-	
+	end	
   end
 
 
 
-  post '/get_role_endpoint' do
+
+  get '/users/:email/status' do
+      role = ""
+ 	status = ""
+	 puts request.env["HTTP_TOKEN"]
+      decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+
+      decoded = decoded_token.to_json
+
+      parsed = JSON.parse (decoded)
+
+      email = parsed[0]['email']
+      puts email
+
+	params[:email] = email
+       puts #{params[:email]}
+
+	    psql = PG::Connection.new(db_params)
+	    psql.exec( "SELECT STATUS FROM USERS WHERE EMAIL='#{params[:email]}'" ) do |result|
+		  result.each do |row|
+	          puts " %s " %
+		   role =  row.to_json
+		   role.to_json
+                   status = row
+	        end
+	end
+		if status != ""
+			return status.to_json
+		else
+			msg="unregistered user"
+			msg.to_json
+	end	
+  end
+
+
+  post '/users/:email/status' do
+      role = ""
+ 	status = ""
+	 puts request.env["HTTP_TOKEN"]
+      decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+
+      decoded = decoded_token.to_json
+
+      parsed = JSON.parse (decoded)
+
+      email = parsed[0]['email']
+      email_for_status = "#{params[:email]}"
+      puts email
+      puts email_for_status
+
+	params[:email] = email
+       puts #{params[:email]}
+	puts #email_for_status
+
+	    psql = PG::Connection.new(db_params)
+	    psql.exec( "SELECT ROLE FROM USERS WHERE EMAIL='#{params[:email]}'" ) do |result|
+		  result.each do |row|
+	          puts " %s " %
+		   role =  row.to_json
+                   role = row.to_s
+	        end
+	end
+		if role.include? "admin"
+			puts role	
+
+	   	        psql = PG::Connection.new(db_params)
+	                psql.exec( "UPDATE USERS SET STATUS = '#{params[:status]}' WHERE EMAIL='#{email_for_status}'" ) 
+			msg="User status updated"
+			msg.to_json
+		else
+			msg="the provided token is not from an admin user"
+			msg.to_json
+	end	
+  end
+
+
+
+
+ post '/users/:email/change_user_password' do
+      role = ""
+ 	status = ""
+	 puts request.env["HTTP_TOKEN"]
+      decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+
+      decoded = decoded_token.to_json
+
+      parsed = JSON.parse (decoded)
+
+      email = parsed[0]['email']
+      email_for_password = "#{params[:email]}"
+      puts email
+      puts email_for_password
+
+	params[:email] = email
+       puts #{params[:email]}
+	puts #email_for_status
+
+	    psql = PG::Connection.new(db_params)
+	    psql.exec( "SELECT ROLE FROM USERS WHERE EMAIL='#{params[:email]}'" ) do |result|
+		  result.each do |row|
+	          puts " %s " %
+		   role =  row.to_json
+                   role = row.to_s
+	        end
+	end
+		if role.include? "admin"
+			puts role	
+
+	   	        psql = PG::Connection.new(db_params)
+	                psql.exec( "UPDATE USERS SET PASSWORD = '#{params[:password]}' WHERE EMAIL='#{email_for_password}'" ) 
+			msg="User password updated"
+			msg.to_json
+		else
+			msg="the provided token is not from an admin user"
+			msg.to_json
+	end	
+  end
+
+
+  post '/users/:email/role' do
+      role = ""
+ 	status = ""
+	 puts request.env["HTTP_TOKEN"]
+      decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+
+      decoded = decoded_token.to_json
+
+      parsed = JSON.parse (decoded)
+
+      email = parsed[0]['email']
+      email_for_role = "#{params[:email]}"
+      puts email
+      puts email_for_role
+
+	params[:email] = email
+       puts #{params[:email]}
+	puts #email_for_status
+
+	    psql = PG::Connection.new(db_params)
+	    psql.exec( "SELECT ROLE FROM USERS WHERE EMAIL='#{params[:email]}'" ) do |result|
+		  result.each do |row|
+	          puts " %s " %
+		   role =  row.to_json
+                   role = row.to_s
+	        end
+	end
+		if role.include? "admin"
+			puts role	
+
+	   	        psql = PG::Connection.new(db_params)
+	                psql.exec( "UPDATE USERS SET ROLE = '#{params[:role]}' WHERE EMAIL='#{email_for_role}'" ) 
+			msg="User role updated"
+			msg.to_json
+		else
+			msg="the provided token is not from an admin user"
+			msg.to_json
+	end	
+  end
+
+
+
+
+
+
+
+
+
+  get '/users/:email/get_role_endpoints' do
       role = ""
 	ep = ""
-      puts "#{params[:token]}"
-      decoded_token = JWT.decode("#{params[:token]}", SECRET)
+	puts request.env["HTTP_TOKEN"]
+      decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
 
       decoded = decoded_token.to_json
 
@@ -164,7 +349,7 @@ end
 
 
 
-get '/get_all' do
+get '/users' do
   all = ""
   psql = PG::Connection.new(db_params)
  psql.exec( "SELECT * FROM USERS" ) do |result|
@@ -182,7 +367,7 @@ get '/get_all' do
 end
 
 
-get '/get_all_roles' do
+get '/users/roles/get_all' do
   all = ""
   psql = PG::Connection.new(db_params)
  psql.exec( "SELECT * FROM ROLES" ) do |result|
@@ -190,7 +375,7 @@ get '/get_all_roles' do
   
   result.each do |row|
     puts " %s | %s " %
-      row.values_at('role', 'eendpoint')
+      row.values_at('role', 'endpoint')
       all = all + "" + row.to_json
   end
      

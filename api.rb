@@ -5,8 +5,8 @@ require 'json'
 require 'jwt'
 
 db_params = {
-#  host: 'son-postgres',
-  host: '172.18.0.2',
+  host: 'son-postgres',
+#  host: '172.18.0.2',
   dbname: 'gatekeeper',
   user: 'sonatatest',
   password: 'sonata'
@@ -121,13 +121,16 @@ end
       parsed = JSON.parse (decoded)
 
       email = parsed[0]['email']
+      email_for_role = "#{params[:email]}"
       puts email
+      puts email_for_role	  
+
 
 	params[:email] = email
        puts #{params[:email]}
 
 	    psql = PG::Connection.new(db_params)
-	    psql.exec( "SELECT ROLE FROM USERS WHERE EMAIL='#{params[:email]}'" ) do |result|
+	    psql.exec( "SELECT ROLE FROM USERS WHERE EMAIL='#{email_for_role}'" ) do |result|
 		  result.each do |row|
 	          puts " %s " %
 		  role = row
@@ -155,13 +158,15 @@ end
       parsed = JSON.parse (decoded)
 
       email = parsed[0]['email']
+      email_for_status = "#{params[:email]}"
       puts email
+      puts email_for_status
 
 	params[:email] = email
        puts #{params[:email]}
 
 	    psql = PG::Connection.new(db_params)
-	    psql.exec( "SELECT STATUS FROM USERS WHERE EMAIL='#{params[:email]}'" ) do |result|
+	    psql.exec( "SELECT STATUS FROM USERS WHERE EMAIL='#{email_for_status}'" ) do |result|
 		  result.each do |row|
 	          puts " %s " %
 		   role =  row.to_json
@@ -208,10 +213,28 @@ end
 		if role.include? "admin"
 			puts role	
 
-	   	        psql = PG::Connection.new(db_params)
-	                psql.exec( "UPDATE USERS SET STATUS = '#{params[:status]}' WHERE EMAIL='#{email_for_status}'" ) 
-			msg="User status updated"
-			msg.to_json
+			new_status_body = JSON.parse(request.body.read)
+			puts new_status_body
+			new_status = new_status_body['status']
+			puts new_status
+
+			if (new_status == "active") || (new_status == "cancelled") || (new_status == "suspended")
+				puts "the new status is correct"
+				puts new_status
+				psql = PG::Connection.new(db_params)
+				psql.exec( "UPDATE USERS SET STATUS = '#{new_status}' WHERE EMAIL='#{email_for_status}'" ) 
+				msg="User status updated to " + new_status
+				msg.to_json
+			else
+				msg="Invalid status. It only can be active, suspended or cancelled"	
+				msg.to_json				
+			end
+
+
+
+
+
+
 		else
 			msg="the provided token is not from an admin user"
 			msg.to_json
@@ -251,8 +274,13 @@ end
 		if role.include? "admin"
 			puts role	
 
-	   	        psql = PG::Connection.new(db_params)
-	                psql.exec( "UPDATE USERS SET PASSWORD = '#{params[:password]}' WHERE EMAIL='#{email_for_password}'" ) 
+			new_password_body = JSON.parse(request.body.read)
+			puts new_password_body
+			new_password = new_password_body['password']
+			puts new_password
+
+	   	    psql = PG::Connection.new(db_params)
+	        psql.exec( "UPDATE USERS SET PASSWORD = '#{new_password}' WHERE EMAIL='#{email_for_password}'" ) 
 			msg="User password updated"
 			msg.to_json
 		else
@@ -292,10 +320,26 @@ end
 		if role.include? "admin"
 			puts role	
 
-	   	        psql = PG::Connection.new(db_params)
-	                psql.exec( "UPDATE USERS SET ROLE = '#{params[:role]}' WHERE EMAIL='#{email_for_role}'" ) 
-			msg="User role updated"
-			msg.to_json
+
+			new_role_body = JSON.parse(request.body.read)
+			puts new_role_body
+			new_role = new_role_body['role']
+			puts new_role
+
+			if (new_role == "admin") || (new_role == "developer") || (new_role == "customer")
+				puts "the new role is correct"
+				puts new_role
+				psql = PG::Connection.new(db_params)
+				psql.exec( "UPDATE USERS SET ROLE='#{new_role}' WHERE EMAIL='#{email_for_role}'" ) 				
+				msg="User role updated to " + new_role
+				msg.to_json
+			else
+				msg="Invalid role. It only can be admin, developer or customer"	
+				msg.to_json				
+			end
+
+
+
 		else
 			msg="the provided token is not from an admin user"
 			msg.to_json
@@ -321,13 +365,17 @@ end
       parsed = JSON.parse (decoded)
 
       email = parsed[0]['email']
+	  puts email
+
+      email_for_roles = "#{params[:email]}"
       puts email
+      puts email_for_roles
 
 	params[:email] = email
        puts #{params[:email]}
 
 	    psql = PG::Connection.new(db_params)
-	    psql.exec( "SELECT ENDPOINT FROM ROLES WHERE ROLE IN (SELECT ROLE FROM USERS WHERE EMAIL='#{params[:email]}')" ) do |result|
+	    psql.exec( "SELECT ENDPOINT FROM ROLES WHERE ROLE IN (SELECT ROLE FROM USERS WHERE EMAIL='#{email_for_roles}')" ) do |result|
 		  result.each do |row|
 	          puts "%s" %
 		  role = role + row.to_json

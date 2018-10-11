@@ -2,7 +2,9 @@ source :rubygems
 
 gem 'jwt'
 gem 'sinatra'
-#gem 'sinatra-activerecord'
+gem 'activerecord'
+gem 'sinatra-activerecord'
+gem 'rake'
 gem 'pg'
 gem 'json'
 

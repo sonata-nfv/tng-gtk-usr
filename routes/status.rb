@@ -1,5 +1,5 @@
 
-  get '/users/:email/status' do
+  get '/users/:username/status' do
     role = ""
    status = ""
    puts request.env["HTTP_TOKEN"]
@@ -9,86 +9,76 @@
 
     parsed = JSON.parse (decoded)
 
-    email = parsed[0]['email']
-    email_for_status = "#{params[:email]}"
-    puts email
-    puts email_for_status
+    decoded_username = parsed[0]['username']
+    username_for_status = "#{params[:username]}"
+    puts "decoded user : " + decoded_username.to_s    
+    puts "user for status : " + username_for_status.to_s
 
-  params[:email] = email
-     puts #{params[:email]}
 
-      psql = PG::Connection.new(DB_PARAMS)
-      psql.exec( "SELECT STATUS FROM USERS WHERE EMAIL='#{email_for_status}'" ) do |result|
-        result.each do |row|
-            puts " %s " %
-         role =  row.to_json
-         role.to_json
-                 status = row
-          end
-  end
-      if status != ""
-          return status.to_json
-      else
-          msg="unregistered user"
-          msg.to_json
-  end	
+    @user = User.find_by_username( decoded_username )
+    puts "token user decoded"
+    #puts @user['username']
+
+    if @user['role'] == "admin"
+
+        @user_for_status = User.find_by_username( username_for_status ) 
+
+        if @user_for_status
+            #@user_for_status.to_json   
+            return 200, @user_for_status['status']
+        else 
+            msg="unregistered user"
+            return 404, msg.to_json
+        end
+
+    else
+        msg="Admin token required"
+        return 404, msg.to_json
+    end
 end
 
 
-post '/users/:email/status' do
+post '/users/:username/status' do
     role = ""
-   status = ""
-   puts request.env["HTTP_TOKEN"]
+    status = ""
+    puts request.env["HTTP_TOKEN"]
     decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
 
     decoded = decoded_token.to_json
 
     parsed = JSON.parse (decoded)
 
-    email = parsed[0]['email']
-    email_for_status = "#{params[:email]}"
-    puts email
-    puts email_for_status
-
-  params[:email] = email
-     puts #{params[:email]}
-  puts #email_for_status
-
-      psql = PG::Connection.new(DB_PARAMS)
-      psql.exec( "SELECT ROLE FROM USERS WHERE EMAIL='#{params[:email]}'" ) do |result|
-        result.each do |row|
-            puts " %s " %
-         role =  row.to_json
-                 role = row.to_s
-          end
-  end
-      if role.include? "admin"
-          puts role	
-
-          new_status_body = JSON.parse(request.body.read)
-          puts new_status_body
-          new_status = new_status_body['status']
-          puts new_status
-
-          if (new_status == "active") || (new_status == "cancelled") || (new_status == "suspended")
-              puts "the new status is correct"
-              puts new_status
-              psql = PG::Connection.new(DB_PARAMS)
-              psql.exec( "UPDATE USERS SET STATUS = '#{new_status}' WHERE EMAIL='#{email_for_status}'" ) 
-              msg="User status updated to " + new_status
-              msg.to_json
-          else
-              msg="Invalid status. It only can be active, suspended or cancelled"	
-              msg.to_json				
-          end
+    decoded_username = parsed[0]['username']
+    username_for_status = "#{params[:username]}"
+    puts "decoded user : " + decoded_username.to_s    
+    puts "user for status : " + username_for_status.to_s
 
 
+    @user = User.find_by_username( decoded_username )
+    puts "token user decoded"
+    #puts @user['username']
 
+    if @user['role'] == "admin"
 
+        @user_for_status = User.find_by_username( username_for_status ) 
 
+        if @user_for_status
 
-      else
-          msg="the provided token is not from an admin user"
-          msg.to_json
-  end	
+            new_status_body = JSON.parse(request.body.read)
+            puts new_status_body
+            new_status = new_status_body['status']
+            puts new_status
+
+            #@user_for_status.to_json   
+            @user_for_status.update_attribute(:status, new_status)
+            return 200, "User status updated"
+        else 
+            msg="unregistered user"
+            return 404, msg.to_json
+        end
+
+    else
+        msg="Admin token required"
+        return 404, msg.to_json
+    end
 end

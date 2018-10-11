@@ -1,150 +1,138 @@
-get '/users' do
-    all = ""
-    psql = PG::Connection.new(DB_PARAMS)
-   psql.exec( "SELECT * FROM USERS" ) do |result|
-    puts "user | email    | role"
-    
-    result.each do |row|
-      puts " %s | %s | %s " %
-        row.values_at('name', 'email', 'role')
-        all = all + "" + row.to_json
+    get '/users' do
+        @users = User.all
+        @users.to_json     
     end
-       
+
+    get '/users/:username' do
+        @user = User.find_by_username(params[:username])
+        @user.to_json
     end
-      all.to_json
-     
-  end
 
-  get '/users/:email' do
-	role = ""
-	puts "this is the email"
-	puts "#{params[:email]}"
-	
-
-    psql = PG::Connection.new(DB_PARAMS)
-    psql.exec( "SELECT * FROM USERS WHERE EMAIL='#{params[:email]}'" ) do |result|
-	  puts "user | email    | role"
-	  result.each do |row|
-          	puts " %s " %
-		  role = role + "" + row.to_json
-		  puts 'cosassss'
-        	end
-	end
-	if role != ""
-		role.to_json
-
-	else
-		msg="unregistered user for checking"
-		msg.to_json
-	end
-  end
 
   post '/users' do
-	puts "#{params[:name]}"
-	puts "#{params[:email]}"
-	puts "#{params[:password]}"
-	puts "#{params[:role]}"
-        puts "#{params[:status]}"
 
-    old_role = ""
-   puts "#{params[:email]}"
-    psql = PG::Connection.new(DB_PARAMS)
-    psql.exec( "SELECT ROLE FROM USERS WHERE EMAIL='#{params[:email]}'" ) do |result|
-	  puts "user | email    | role"
-	  result.each do |row|
-          puts " %s " %
-	  old_role = old_role + "" + row.to_json
-        end
-end
-	if old_role != ""
-		msg="this user is already registered"
-		msg.to_json
-	else
-		psql.exec( "INSERT INTO USERS (NAME, PASSWORD, EMAIL, ROLE, STATUS) VALUES ('#{params[:name]}', '#{params[:password]}', '#{params[:email]}', '#{params[:role]}', '#{params[:status]}')" )
-		msg="user registered"
-		msg.to_json
-	end
-  end
+    new_user_body = JSON.parse(request.body.read)
 
- post '/users/:email/change_user_password' do
-    role = ""
-   status = ""
-   puts request.env["HTTP_TOKEN"]
-    decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+    @username = new_user_body['username']
+    @name = new_user_body['name']
+    @password = new_user_body['password']
+    @email = new_user_body['email']
+    @role = new_user_body['role']
+    @status = new_user_body['status']
 
-    decoded = decoded_token.to_json
+    puts @username
+    puts @name
+    puts @password
+    puts @email
+    puts @role
+    puts @status
 
-    parsed = JSON.parse (decoded)
+    
+    #new_user_body = JSON.parse(request.body.read)
+    @post = User.new( new_user_body )
 
-    email = parsed[0]['email']
-    email_for_password = "#{params[:email]}"
-    puts email
-    puts email_for_password
-
-  params[:email] = email
-     puts #{params[:email]}
-  puts #email_for_status
-
-      psql = PG::Connection.new(DB_PARAMS)
-      psql.exec( "SELECT ROLE FROM USERS WHERE EMAIL='#{params[:email]}'" ) do |result|
-        result.each do |row|
-        puts " %s " %
-        role =  row.to_json
-        role = row.to_s
+    @exist = User.find_by_username(new_user_body['username'])
+    if !@exist
+        @post.save    
+        return 200, 'New User registered'   
+    else
+        return 409, 'User already exist'
     end
+
+
   end
-      if role.include? "admin"
-          puts role	
-
-          new_password_body = JSON.parse(request.body.read)
-          puts new_password_body
-          new_password = new_password_body['password']
-          puts new_password
-
-          psql = PG::Connection.new(DB_PARAMS)
-          psql.exec( "UPDATE USERS SET PASSWORD = '#{new_password}' WHERE EMAIL='#{email_for_password}'" ) 
-          msg="User password updated"
-          msg.to_json
-      else
-          msg="the provided token is not from an admin user"
-          msg.to_json
-  end	
-end
 
 
-get '/users/:email/get_role_endpoints' do
-    role = ""
-  ep = ""
-  puts request.env["HTTP_TOKEN"]
+
+
+    post '/users/:username/password' do
+        role = ""
+        status = ""
+        puts request.env["HTTP_TOKEN"]
+         decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+     
+         decoded = decoded_token.to_json
+     
+         parsed = JSON.parse (decoded)
+     
+         decoded_username = parsed[0]['username']
+         username_for_password = "#{params[:username]}"
+         puts "decoded user : " + decoded_username.to_s    
+         puts "user for status : " + username_for_password.to_s
+     
+     
+         @user = User.find_by_username( decoded_username )
+         puts "token user decoded"
+         #puts @user['username']
+     
+         if @user['role'] == "admin"
+     
+             @user_for_password = User.find_by_username( username_for_password ) 
+     
+             if @user_for_status
+     
+                 new_password_body = JSON.parse(request.body.read)
+                 puts new_password_body
+                 new_password = new_status_body['password']
+                 puts new_password
+     
+                 #@user_for_status.to_json   
+                 @user_for_password.update_attribute(:password, new_password)
+                 return 200, "User password updated"
+             else 
+                 msg="Unregistered user"
+                 return 404, msg.to_json
+             end
+     
+         else
+             msg="Admin token required"
+             return 404, msg.to_json
+         end
+    end
+
+
+get '/users/:username/endpoints' do
+
+    puts request.env["HTTP_TOKEN"]
     decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
 
     decoded = decoded_token.to_json
 
     parsed = JSON.parse (decoded)
 
-    email = parsed[0]['email']
-    puts email
+    decoded_username = parsed[0]['username']
+    username_for_endpoints = "#{params[:username]}"
+    puts "decoded user : " + decoded_username.to_s    
+    puts "user for endpoints : " + username_for_endpoints.to_s
 
-    email_for_roles = "#{params[:email]}"
-    puts email
-    puts email_for_roles
 
-  params[:email] = email
-     puts #{params[:email]}
+    @user = User.find_by_username( decoded_username )
+    puts "token user decoded"
+    #puts @user['username']
 
-      psql = PG::Connection.new(DB_PARAMS)
-      psql.exec( "SELECT ENDPOINT FROM ROLES WHERE ROLE IN (SELECT ROLE FROM USERS WHERE EMAIL='#{email_for_roles}')" ) do |result|
-        result.each do |row|
-            puts "%s" %
-        role = role + row.to_json
-          end
-  end
-      if role != ""
-          role.to_json
-      else
-          msg="unregistered user"
-          msg.to_json
-      end
+    if @user['role'] == "admin"
+
+        @user_for_endpoints = User.find_by_username( username_for_endpoints ) 
+
+        if @user_for_endpoints
+
+            puts @user_for_endpoints['role']
+            role = @user_for_endpoints['role']
+
+            #@endpoints = Role.where(role: role )
+            @endpoints = Role.where(role: role ).select("endpoint").all
+
+            @endpoints.to_json
+
+        else 
+            msg="Unregistered user"
+            return 404, msg.to_json
+        end
+
+    else
+        msg="Admin token required"
+        return 404, msg.to_json
+    end
 end
 
 

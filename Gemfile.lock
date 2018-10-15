@@ -13,10 +13,12 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     arel (9.0.0)
+    bcrypt (3.1.12)
     coderay (1.1.2)
     concurrent-ruby (1.0.5)
     daemons (1.2.6)
     diff-lcs (1.3)
+    encrypted_strings (0.3.3)
     eventmachine (1.2.7)
     ffi (1.9.25)
     formatador (0.2.5)
@@ -109,6 +111,8 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
+  bcrypt
+  encrypted_strings
   growl
   guard
   guard-bundler

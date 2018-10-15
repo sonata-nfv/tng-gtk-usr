@@ -33,7 +33,7 @@
 
     else
         msg="Admin token required"
-        return 404, msg.to_json
+        return 401, msg.to_json
     end
 end
 
@@ -74,11 +74,11 @@ post '/users/:username/status' do
             return 200, "User status updated"
         else 
             msg="unregistered user"
-            return 404, msg.to_json
+            return 409, msg.to_json
         end
 
     else
         msg="Admin token required"
-        return 404, msg.to_json
+        return 401, msg.to_json
     end
 end

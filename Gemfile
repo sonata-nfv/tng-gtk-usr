@@ -7,9 +7,12 @@ gem 'sinatra-activerecord'
 gem 'rake'
 gem 'pg'
 gem 'json'
+gem 'bcrypt'
+#gem 'digest'
 
 gem 'net-ldap'
 gem 'haml'
+
 
 
 

@@ -29,30 +29,32 @@ GET
 
 ## /login: 
 POST
-	Login into the 5GTano Portal. This will create an user token.
+	Login into the 5GTango Portal. This will create and return a user token.
 
-## /users/:email/role: 
+## /users/:email/roles 
 GET
 	This will give you the role for the selected user. You need an admin token to access this info.
 
 POST
-	Here you can change the status of the user account. You need an admin token to change this info.
+	Here you can change the roles of the user account. You need an admin token to change this info. The body must have a `JSON` document with the list of roles to be added. E.g., `{"roles": [ "admin", "developer", "customer"]}`.
+	
+Note: we need to decide if a user may have more than one role at the same time or not.
 
 ## /users/:email/status
 GET
 	This will give you the status for the selected user. You need an admin token to access this info.
 POST 
-       Here you can change the status of the user account. You need an admin token to change this info.<
+       Here you can change the status of the user account. You need an admin token to change this info. The body must have a `JSON` document with the status to be given. E.g., `{"status": "active"}`.
 
-## /users/:email/change_user_password
-POST 
-       Here you can change the password of the user account. You need an admin token to change this info.
+## /users/:email
+PATCH 
+       Here you can change the password of the user account. You need an admin token to change this info. The body must have a `JSON` document with the new password. E.g., `{"password": "5g7ang0"}`. Note: passwords are saved encripted.
 
-## /users/:email/get_role_endpoints
+## /users/:email/get_role_endpoints ??
 GET
 	This will give you the status for the selected user. You need an admin token to access this info.
 
-## /users/roles/get_all
+## /users/roles
 GET
 	This will give you a list of all the roles and endpoints available for the users.
 

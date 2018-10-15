@@ -13,7 +13,7 @@ RUN bundle install --system
 #RUN chmod 755 /docker-entrypoint-initdb.d/createExtension.sh
 
 
-EXPOSE 5000
+EXPOSE 4567
 ENV POSTGRES_DB gatekeeper
 ENV POSTGRES_PASSWORD tango
 ENV POSTGRES_USER tangodefault
@@ -26,9 +26,9 @@ ENV REPOSITORY_URL=http://tng-rep:4012
 ENV POLICY_MNGR_URL=http://tng-policy-mngr:8081/api/v1
 ENV SLM_URL=http://tng-slice-mngr:5998/api
 ENV SLICE_INSTANCE_CHANGE_CALLBACK_URL=http://tng-gtk-sp:5000/requests
-ENV PORT 5000
+ENV PORT 4567
 
-EXPOSE 4567
+
 
 #CMD ["ruby", "api.rb", "-p", "4567", "-o", "0.0.0.0"]
 

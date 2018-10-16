@@ -30,8 +30,8 @@ ENV PORT 4567
 
 
 
-#CMD ["ruby", "api.rb", "-p", "4567", "-o", "0.0.0.0"]
+CMD ["ruby", "api.rb", "-p", "4567", "-o", "0.0.0.0"]
 
 
-CMD ["bundle", "exec", "thin", "-p", "4567", "-D", "start"]
+#CMD ["bundle", "exec", "thin", "-p", "4567", "-D", "start"]
 

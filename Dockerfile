@@ -9,8 +9,7 @@ ADD . /app
 RUN bundle install --system
 
 
-#ADD createExtension.sh /docker-entrypoint-initdb.d/
-#RUN chmod 755 /docker-entrypoint-initdb.d/createExtension.sh
+
 
 
 EXPOSE 4567
@@ -29,9 +28,18 @@ ENV SLICE_INSTANCE_CHANGE_CALLBACK_URL=http://tng-gtk-sp:5000/requests
 ENV PORT 4567
 
 
+#ADD createExtension.sh /docker-entrypoint-initdb.d/
+#RUN chmod 755 /docker-entrypoint-initdb.d/createExtension.sh
 
-CMD ["ruby", "api.rb", "-p", "4567", "-o", "0.0.0.0"]
+
+#CMD ["ruby", "api.rb", "-p", "4567", "-o", "0.0.0.0"]
+
+
+
+#CMD ["ruby", "api.rb", "-p", "4567", "-o", "0.0.0.0", "rake", "db:migrate"]
+CMD ["sh","-c","rake db:migrate && ruby api.rb -p 4567 -o 0.0.0.0"]
 
 
 #CMD ["bundle", "exec", "thin", "-p", "4567", "-D", "start"]
+
 

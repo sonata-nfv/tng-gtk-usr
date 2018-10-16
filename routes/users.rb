@@ -20,7 +20,7 @@
         @status = new_user_body['status']
 
         
-        pwd = Digest::SHA1.hexdigest @password
+        pwd = Digest::SHA1.hexdigest @password.to_s
         puts "this is the login encrypted password"
         puts pwd   
         puts " "

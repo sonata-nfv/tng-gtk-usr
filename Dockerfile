@@ -32,12 +32,12 @@ ENV PORT 4567
 #RUN chmod 755 /docker-entrypoint-initdb.d/createExtension.sh
 
 
-#CMD ["ruby", "api.rb", "-p", "4567", "-o", "0.0.0.0"]
+CMD ["ruby", "api.rb", "-p", "4567", "-o", "0.0.0.0"]
 
 
 
 #CMD ["ruby", "api.rb", "-p", "4567", "-o", "0.0.0.0", "rake", "db:migrate"]
-CMD ["sh","-c","rake db:migrate && ruby api.rb -p 4567 -o 0.0.0.0"]
+#CMD ["sh","-c","rake db:migrate && ruby api.rb -p 4567 -o 0.0.0.0"]
 
 
 #CMD ["bundle", "exec", "thin", "-p", "4567", "-D", "start"]

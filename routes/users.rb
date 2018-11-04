@@ -48,7 +48,8 @@
         @exist = User.find_by_username(new_user_body['username'])
         if !@exist
             @post.save    
-            return 200, 'New User registered'   
+            #return 200, 'New User registered'   
+            return 200, @post.to_json 
         else
             return 409, 'User already exist'
         end

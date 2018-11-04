@@ -69,8 +69,10 @@ post '/users/:username/status' do
             new_status = new_status_body['status']
             puts new_status
 
-            #@user_for_status.to_json   
-            @user_for_status.update_attribute(:status, new_status)
+            puts @user_for_status   
+            user_for_status_2 = User.find_by_username(username_for_status).update_column(:status, new_status)
+            #user_for_status_2.update_attribute(:status, new_status)
+
             return 200, "User status updated"
         else 
             msg="unregistered user"

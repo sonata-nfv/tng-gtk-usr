@@ -47,6 +47,14 @@ post "/login" do
 	end
   end
 
+
+
+  delete "/login" do
+	redirect '/'
+  end
+
+
+
   post "/login/old" do
 	role = ""
 	puts "#{params[:username]}"
@@ -63,4 +71,3 @@ post "/login" do
 		return 404, msg.to_json
 	end
   end
-

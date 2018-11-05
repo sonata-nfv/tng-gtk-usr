@@ -50,7 +50,7 @@ post "/login" do
 
 
   delete "/login" do
-	redirect '/'
+	return 204
   end
 
 

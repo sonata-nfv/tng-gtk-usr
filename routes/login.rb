@@ -25,7 +25,19 @@ post "/login" do
 
 		payload = { username: "#{params[:username]}", exp: Time.now.to_i + 60 * 60, iat: Time.now.to_i}
 		token = JWT.encode(payload, SECRET,'HS256')
-		return 200, token.to_json
+
+		json_token = JSON.generate("token"=>token )
+		puts json_token
+
+        role = @user['role']
+		endpoints = Role.where(role: role ).select("endpoint", "verbs").all
+		#ep = endpoints.to_json		
+		ep = JSON.parse (endpoints.to_json)
+		puts ep
+		
+		json_output = JSON.pretty_generate [{"token"=>token},{"endpoints"=>ep}]
+		puts json_output
+		return 200, json_output
 
 	else		
 		puts "the pwd is not correct"
@@ -50,7 +62,7 @@ post "/login" do
 
 
   delete "/login" do
-	return 204
+	redirect '/'
   end
 
 

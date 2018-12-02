@@ -21,9 +21,14 @@ post "/login" do
 	@user['password']
 
 
-	if pwd == @user['password']				
+	if pwd == @user['password']	
 
-		payload = { username: "#{params[:username]}", exp: Time.now.to_i + 60 * 60, iat: Time.now.to_i}
+		t_now = Time.now
+		puts t_now
+		t_60 = t_now + 3600			
+
+		#payload = { username: "#{params[:username]}", password: @user['email'], exp: Time.now.to_i + 60 * 60, iat: Time.now.to_i}
+		payload = { username: "#{params[:username]}", password: @user['email'], login_time: t_now, expiration_time: t_60}
 		token = JWT.encode(payload, SECRET,'HS256')
 
 		json_token = JSON.generate("token"=>token )
@@ -37,6 +42,13 @@ post "/login" do
 		
 		json_output = JSON.pretty_generate [{"token"=>token},{"endpoints"=>ep}]
 		puts json_output
+
+		t_now = Time.now
+		puts t_now
+		t_60 = t_now + 3600
+		puts t_60
+
+
 		return 200, json_output
 
 	else		

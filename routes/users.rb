@@ -17,7 +17,7 @@
         @password = new_user_body['password']
         @email = new_user_body['email']
         @role = new_user_body['role']
-        @status = new_user_body['status']
+        #@status = new_user_body['status']
 
         
         pwd = Digest::SHA1.hexdigest @password.to_s
@@ -34,7 +34,7 @@
         puts @password
         puts @email
         puts @role
-        puts @status
+        #puts @status
 
         #new_user_body = JSON.parse(request.body.read)
         @post = User.new( new_user_body )
@@ -43,6 +43,9 @@
 
         puts "password from object"
         puts @post['password']
+        puts @post['status']
+        @post['status'] = "active"
+        puts @post['status']
         #return @post.to_json
     
         @exist = User.find_by_username(new_user_body['username'])

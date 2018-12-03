@@ -147,8 +147,12 @@ patch '/users/:username' do
     decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
 
     decoded = decoded_token.to_json
+    puts "this is the decoded token"
+    puts decoded_token
+    puts "this is the decoded token"
 
-    parsed = JSON.parse (decoded)
+    #parsed = JSON.parse (decoded)
+    parsed = JSON.parse (decoded_token.to_json)
 
     decoded_username = parsed[0]['username']
     username_for_status = "#{params[:username]}"

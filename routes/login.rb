@@ -23,6 +23,20 @@ post "/login" do
 		json_token = JSON.generate("token"=>token )
 		puts json_token
 
+
+		decoded_token = JWT.decode(token, SECRET)
+
+		decoded = decoded_token.to_json
+		puts "this is the decoded token"
+		puts decoded_token
+		puts "this is the decoded token"
+	
+		#parsed = JSON.parse (decoded)
+		parsed = JSON.parse (decoded_token.to_json)
+		puts parsed
+
+
+
         role = @user['role']
 		endpoints = Role.where(role: role ).select("endpoint", "verbs").all
 

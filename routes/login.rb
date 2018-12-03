@@ -29,7 +29,10 @@ post "/login" do
 		ep = JSON.parse (endpoints.to_json)
 		puts ep
 		
-		json_output = JSON.pretty_generate [{"token"=>token},{"endpoints"=>ep}]
+		#json_output = JSON.pretty_generate [{"token"=>token},{"endpoints"=>ep}]
+		
+		text = {"token"=>token, "endpoints"=>ep}
+		json_output = JSON.pretty_generate (text)
 		puts json_output
 
 		return 200, json_output

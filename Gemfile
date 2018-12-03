@@ -9,6 +9,7 @@ gem 'pg'
 gem 'json'
 gem 'bcrypt'
 #gem 'digest'
+gem 'email_validator'
 
 gem 'net-ldap'
 gem 'haml'

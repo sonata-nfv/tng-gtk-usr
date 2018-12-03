@@ -186,6 +186,20 @@ patch '/users/:username' do
             puts new_email
             puts @user_for_update   
 
+
+            puts "validating mail"            
+            validator =  EmailValidator.valid?(new_email)
+            if validator
+                puts "valid email"
+                puts "vvvvv"
+            else
+                puts "invalid email"
+                msg="Invalid email"
+                return 409, msg.to_json
+            end
+            puts "validating mail"
+
+
             user_for_update_2 = User.find_by_username(username_for_update).update_column(:status, new_status)
             user_for_update_3 = User.find_by_username(username_for_update).update_column(:role, new_role)
             user_for_update_4 = User.find_by_username(username_for_update).update_column(:password, new_password_encrypted)
@@ -213,9 +227,23 @@ patch '/users/:username' do
             puts new_email
             puts @user_for_update   
 
+            puts "validating mail"            
+            validator =  EmailValidator.valid?(new_email)
+            if validator
+                puts "valid email"
+                puts "vvvvv"
+            else
+                puts "invalid email"
+                msg="Invalid email"
+                return 409, msg.to_json
+            end
+            puts "validating mail"
+
+
             user_for_update_2 = User.find_by_username(username_for_update).update_column(:status, new_status)
             #user_for_update_3 = User.find_by_username(username_for_update).update_column(:role, new_role)
             #user_for_update_4 = User.find_by_username(username_for_update).update_column(:password, new_password_encrypted)
+ 
             user_for_update_5 = User.find_by_username(username_for_update).update_column(:email, new_email)
 
             if new_role == "admin"  

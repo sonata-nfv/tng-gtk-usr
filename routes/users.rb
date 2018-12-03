@@ -24,10 +24,7 @@
         puts "this is the login encrypted password"
         puts pwd   
         puts " "
-        puts "this is luis20"     
-        puts Digest::SHA1.hexdigest 'luis20'
-        puts " "
-        puts " "
+
     
         puts @username
         puts @name
@@ -35,6 +32,18 @@
         puts @email
         puts @role
         #puts @status
+
+        puts "validating mail"            
+        validator =  EmailValidator.valid?(new_user_body['email'])
+        if validator
+            puts "valid email"
+            puts "vvvvv"
+        else
+            puts "invalid email"
+            msg="Invalid email"
+            return 409, msg.to_json
+        end
+        puts "validating mail"
 
         #new_user_body = JSON.parse(request.body.read)
         @post = User.new( new_user_body )

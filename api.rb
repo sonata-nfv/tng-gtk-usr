@@ -7,6 +7,7 @@ require 'sinatra/activerecord'
 require 'rake'
 require 'bcrypt'
 require 'digest/sha1'
+require 'email_validator'
 
 require_relative 'routes/login'
 require_relative 'routes/users'

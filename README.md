@@ -13,19 +13,20 @@ This si designed to be used with dockers. Using the Dockerfile you can build and
 Once done, you will have the api available at http://tng-gtk-usr:4567 with this endpoints:
 
 ## /users
-*GET
+GET
 
-	This will give you a list of all the users.
+This will give you a list of all the users.
 
-*POST
-	You will create a new user. You need this info:
+POST
+
+You will create a new user. You need this info:
 
 	{
-		"username":"my_username",
-		"name":"my_name",		
-		"password":"my_password",
-		"email":"my_email@my_email.com",
-		"role":"my_role"
+	"username":"my_username",
+	"name":"my_name",		
+	"password":"my_password",
+	"email":"my_email@my_email.com",
+	"role":"my_role"
 	}
 
 By default, the status of the user is "admin". It can be changed later with the Patch operation.
@@ -34,23 +35,26 @@ By default, the status of the user is "admin". It can be changed later with the 
 
 ## /users/:username
 
-*GET
+GET
 
-	This will give this user info
+This will give this user info
 
-*PATCH
-	You will modify a user. You need this info:
+PATCH
+
+You will modify a user. You need this info:
 
 	{
-		"status":"cancelled",
-		"password":"luis",
-		"role":"customer",
-		"email":"luis_new@luis_new.com"
+	"status":"cancelled",
+	"password":"luis",
+	"role":"customer",
+	"email":"luis_new@luis_new.com"
 	}
+	
 By default, the status of the user is "admin". It can be changed later with the Patch operation.
 
 
 ## /login 
+
 POST
 
 Login into the 5GTango Portal. This will create and return a user token.
@@ -73,9 +77,9 @@ POST
 This will create a new endpoint. Admin token required. Example:
 
 	{
-		"role":"admin",
-		"endpoint":"packages",
-		"verbs":"get,post,put"
+	"role":"admin",
+	"endpoint":"packages",
+	"verbs":"get,post,put"
 	}
 
 

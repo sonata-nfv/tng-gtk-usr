@@ -32,7 +32,7 @@ By default, the status of the user is "admin". It can be changed later with the 
 
 
 
-## /users/<username>
+## /users/:username
 
 *GET
 
@@ -50,7 +50,7 @@ By default, the status of the user is "admin". It can be changed later with the 
 By default, the status of the user is "admin". It can be changed later with the Patch operation.
 
 
-## /login: 
+## /login 
 POST
 
 Login into the 5GTango Portal. This will create and return a user token.
@@ -79,7 +79,7 @@ This will create a new endpoint. Admin token required. Example:
 	}
 
 
-## /endpoints/<username>
+## /endpoints/:username
 
 GET
 

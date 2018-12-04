@@ -12,53 +12,78 @@ This si designed to be used with dockers. Using the Dockerfile you can build and
 
 Once done, you will have the api available at http://tng-gtk-usr:4567 with this endpoints:
 
-## /users: 
-GET
-	This will give you a list of all the users.
-POST
-	You will create a new user. You need this info:
-		- Name
-		- Email (this must be unique)
-		- Password
-		- Role
-		- Status
+## /users
+*GET
 
-## /users/:email
-GET
-	This will give you the information about this user
+	This will give you a list of all the users.
+
+*POST
+	You will create a new user. You need this info:
+
+	{
+		"username":"my_username",
+		"name":"my_name",		
+		"password":"my_password",
+		"email":"my_email@my_email.com",
+		"role":"my_role"
+	}
+
+By default, the status of the user is "admin". It can be changed later with the Patch operation.
+
+
+
+## /users/<username>
+
+*GET
+
+	This will give this user info
+
+*PATCH
+	You will modify a user. You need this info:
+
+	{
+		"status":"cancelled",
+		"password":"luis",
+		"role":"customer",
+		"email":"luis_new@luis_new.com"
+	}
+By default, the status of the user is "admin". It can be changed later with the Patch operation.
+
 
 ## /login: 
 POST
-	Login into the 5GTango Portal. This will create and return a user token.
 
-## /users/:email/roles 
+Login into the 5GTango Portal. This will create and return a user token.
+The user's Token is need for the other operations. For example:
+	
+- Admin token is needed to modify the status of and user, give "admin" role or establish the password empty.
+	
+- Normal user token can modify that user info, email, password, ls
+status and role (nom admin).
+
+
+## /endpoints
+
 GET
-	This will give you the role for the selected user. You need an admin token to access this info.
+
+This will give you a list of all the roles and endpoints (with verbs) available for the users.
 
 POST
-	Here you can change the roles of the user account. You need an admin token to change this info. The body must have a `JSON` document with the list of roles to be added. E.g., `{"roles": [ "admin", "developer", "customer"]}`.
-	
-Note: we need to decide if a user may have more than one role at the same time or not.
 
-## /users/:email/status
+This will create a new endpoint. Admin token required. Example:
+
+	{
+		"role":"admin",
+		"endpoint":"packages",
+		"verbs":"get,post,put"
+	}
+
+
+## /endpoints/<username>
+
 GET
-	This will give you the status for the selected user. You need an admin token to access this info.
-POST 
-       Here you can change the status of the user account. You need an admin token to change this info. The body must have a `JSON` document with the status to be given. E.g., `{"status": "active"}`.
 
-## /users/:email
-PATCH 
-       Here you can change the password of the user account. You need an admin token to change this info. The body must have a `JSON` document with the new password. E.g., `{"password": "5g7ang0"}`. Note: passwords are saved encripted.
-
-## /users/:email/get_role_endpoints ??
-GET
-	This will give you the status for the selected user. You need an admin token to access this info.
-
-## /users/roles
-GET
-	This will give you a list of all the roles and endpoints available for the users.
-
-
+This will give you a list of all the roles and endpoints (with verbs) available for that user.
 
 
 ## Versioning

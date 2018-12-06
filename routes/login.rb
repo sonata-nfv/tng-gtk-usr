@@ -18,7 +18,16 @@ post "/login" do
 		t_now = Time.now
 		puts t_now
 		t_60 = t_now + 3600			
-		payload = { username: "#{params[:username]}", email: @user['email'], login_time: t_now, expiration_time: t_60}
+		#payload = { username: "#{params[:username]}", email: @user['email'], login_time: t_now, expiration_time: t_60}
+
+        role = @user['role']
+		endpoints = Role.where(role: role ).select("endpoint", "verbs").all
+
+		ep = JSON.parse (endpoints.to_json)
+		puts ep
+
+
+		payload = { username: "#{params[:username]}", email: @user['email'], endpoints: ep , login_time: t_now, expiration_time: t_60}
 		token = JWT.encode(payload, SECRET,'HS256')
 		json_token = JSON.generate("token"=>token )
 		puts json_token

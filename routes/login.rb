@@ -1,4 +1,4 @@
-post "/login" do
+post "/api/v3/login" do
 	role = ""
 	puts "#{params[:username]}"
 	puts "#{params[:password]}"
@@ -82,13 +82,13 @@ post "/login" do
 
 
 
-  delete "/login" do
+  delete "/api/v3/login" do
 	redirect '/'
   end
 
 
 
-  post "/login/old" do
+  post "/api/v3/login/old" do
 	role = ""
 	puts "#{params[:username]}"
 	puts "#{params[:password]}"

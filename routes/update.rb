@@ -1,5 +1,5 @@
 
-  get '/users/:username/update' do
+  get '/api/v3/users/:username/update' do
     #
     role = ""
    status = ""
@@ -39,7 +39,7 @@
 end
 
 
-post '/users/:username/update' do
+post '/api/v3/users/:username/update' do
     role = ""
     status = ""
     puts request.env["HTTP_TOKEN"]
@@ -141,7 +141,7 @@ post '/users/:username/update' do
 end
 
 
-patch '/users/:username' do
+patch '/api/v3/users/:username' do
     role = ""
     status = ""
     puts request.env["HTTP_TOKEN"]

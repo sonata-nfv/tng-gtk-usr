@@ -1,9 +1,9 @@
-get '/endpoints' do
+get '/api/v3/endpoints' do
     @roles = Role.all
     @roles.to_json
 end
 
-delete '/endpoints' do
+delete '/api/v3/endpoints' do
     puts request.env["HTTP_TOKEN"]
     decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
     decoded = decoded_token.to_json
@@ -55,7 +55,7 @@ delete '/endpoints' do
 end
 
 
-post '/endpoints' do
+post '/api/v3/endpoints' do
     puts request.env["HTTP_TOKEN"]
     decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
     decoded = decoded_token.to_json
@@ -99,7 +99,7 @@ post '/endpoints' do
 end
 
 
-get '/endpoints/:username' do
+get '/api/v3/endpoints/:username' do
 
     puts request.env["HTTP_TOKEN"]
     decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
@@ -146,7 +146,7 @@ end
 
 
 
-post '/endpoints-validate' do
+post '/api/v3/endpoints-validate' do
 	role = ""
 	puts "#{params[:username]}"
 	puts "#{params[:password]}"

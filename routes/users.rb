@@ -1,14 +1,14 @@
-    get '/users' do
+    get '/api/v3/users' do
         @users = User.all
         @users.to_json     
     end
 
-    get '/users/:username' do
+    get '/api/v3/users/:username' do
         @user = User.find_by_username(params[:username])
         @user.to_json
     end
 
-    post '/users' do
+    post '/api/v3/users' do
 
         new_user_body = JSON.parse(request.body.read)
     
@@ -68,7 +68,7 @@
       end
 
 
-  post '/users/old' do
+  post '/api/v3/users/old' do
 
     new_user_body = JSON.parse(request.body.read)
 
@@ -104,7 +104,7 @@
 
 
 
-post '/users/:username/password' do
+post '/api/v3/users/:username/password' do
     role = ""
     status = ""
     puts request.env["HTTP_TOKEN"]
@@ -162,7 +162,7 @@ post '/users/:username/password' do
 end
 
 
-get '/users/:username/endpoints' do
+get '/api/v3/users/:username/endpoints' do
 
     puts request.env["HTTP_TOKEN"]
     decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
@@ -207,7 +207,7 @@ get '/users/:username/endpoints' do
 end
 
 
-delete '/users' do
+delete '/api/v3/users' do
     @users = User.destroy_all
     msg = "All users deleted"
     return 200, msg.to_json

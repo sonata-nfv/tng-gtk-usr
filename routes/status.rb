@@ -1,5 +1,5 @@
 
-  get '/users/:username/status' do
+  get '/api/v3/users/:username/status' do
     role = ""
    status = ""
    puts request.env["HTTP_TOKEN"]
@@ -38,7 +38,7 @@
 end
 
 
-post '/users/:username/status' do
+post '/api/v3/users/:username/status' do
     role = ""
     status = ""
     puts request.env["HTTP_TOKEN"]

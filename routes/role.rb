@@ -1,9 +1,9 @@
-    get '/roles' do
+    get '/api/v3/roles' do
         @roles = Role.all
         @roles.to_json      
     end
 
-    get '/users/:username/role' do
+    get '/api/v3/users/:username/role' do
         role = ""
 
         puts request.env["HTTP_TOKEN"]
@@ -41,7 +41,7 @@
     end
 
 
-    post '/users/:username/role' do
+    post '/api/v3/users/:username/role' do
         role = ""
 
         puts request.env["HTTP_TOKEN"]

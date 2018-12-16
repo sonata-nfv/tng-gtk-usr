@@ -1,9 +1,9 @@
 
-  get '/api/v3/users/:username/status' do
+  get '/users/:username/status' do
     role = ""
    status = ""
-   puts request.env["HTTP_TOKEN"]
-    decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+   puts request.env["HTTP_AUTHORIZATION"]
+    decoded_token = JWT.decode(request.env["HTTP_AUTHORIZATION"], SECRET)
 
     decoded = decoded_token.to_json
 
@@ -38,11 +38,11 @@
 end
 
 
-post '/api/v3/users/:username/status' do
+post '/users/:username/status' do
     role = ""
     status = ""
-    puts request.env["HTTP_TOKEN"]
-    decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+    puts request.env["HTTP_AUTHORIZATION"]
+    decoded_token = JWT.decode(request.env["HTTP_AUTHORIZATION"], SECRET)
 
     decoded = decoded_token.to_json
 

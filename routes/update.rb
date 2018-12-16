@@ -1,10 +1,10 @@
 
-  get '/api/v3/users/:username/update' do
+  get '/users/:username/update' do
     #
     role = ""
    status = ""
-   puts request.env["HTTP_TOKEN"]
-    decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+   puts request.env["HTTP_AUTHORIZATION"]
+    decoded_token = JWT.decode(request.env["HTTP_AUTHORIZATION"], SECRET)
 
     decoded = decoded_token.to_json
 
@@ -39,11 +39,11 @@
 end
 
 
-post '/api/v3/users/:username/update' do
+post '/users/:username/update' do
     role = ""
     status = ""
-    puts request.env["HTTP_TOKEN"]
-    decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+    puts request.env["HTTP_AUTHORIZATION"]
+    decoded_token = JWT.decode(request.env["HTTP_AUTHORIZATION"], SECRET)
 
     decoded = decoded_token.to_json
 
@@ -141,11 +141,11 @@ post '/api/v3/users/:username/update' do
 end
 
 
-patch '/api/v3/users/:username' do
+patch '/users/:username' do
     role = ""
     status = ""
-    puts request.env["HTTP_TOKEN"]
-    decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+    puts request.env["HTTP_AUTHORIZATION"]
+    decoded_token = JWT.decode(request.env["HTTP_AUTHORIZATION"], SECRET)
 
     decoded = decoded_token.to_json
     puts "this is the decoded token"

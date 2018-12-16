@@ -1,13 +1,13 @@
-    get '/api/v3/roles' do
+    get '/roles' do
         @roles = Role.all
         @roles.to_json      
     end
 
-    get '/api/v3/users/:username/role' do
+    get '/users/:username/role' do
         role = ""
 
-        puts request.env["HTTP_TOKEN"]
-        decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+        puts request.env["HTTP_AUTHORIZATION"]
+        decoded_token = JWT.decode(request.env["HTTP_AUTHORIZATION"], SECRET)
 
         decoded = decoded_token.to_json
 
@@ -41,11 +41,11 @@
     end
 
 
-    post '/api/v3/users/:username/role' do
+    post '/users/:username/role' do
         role = ""
 
-        puts request.env["HTTP_TOKEN"]
-        decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+        puts request.env["HTTP_AUTHORIZATION"]
+        decoded_token = JWT.decode(request.env["HTTP_AUTHORIZATION"], SECRET)
 
         decoded = decoded_token.to_json
 

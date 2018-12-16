@@ -1,10 +1,17 @@
-post "/api/v3/login" do
+post "/login" do
 	role = ""
-	puts "#{params[:username]}"
-	puts "#{params[:password]}"
+	#puts "#{params[:username]}"
+	#puts "#{params[:password]}"
+	
+	login_body= JSON.parse(request.body.read)
+	puts login_body['username']
+	puts login_body['password']
 
-	@user = User.find_by_username(params[:username])
-	@typed_password = "#{params[:password]}"
+	@user = User.find_by_username(login_body['username'])
+	@typed_password = "#{login_body['password']}"
+
+	#@user = User.find_by_username(params[:username])
+	#@typed_password = "#{params[:password]}"
 	puts "typed_password"
 	puts @typed_password
 	pwd = Digest::SHA1.hexdigest @typed_password.to_s
@@ -27,7 +34,7 @@ post "/api/v3/login" do
 		puts ep
 
 
-		payload = { username: "#{params[:username]}", email: @user['email'], endpoints: ep , login_time: t_now, expiration_time: t_60}
+		payload = { username: login_body['username'], email: @user['email'], endpoints: ep , login_time: t_now, expiration_time: t_60}
 		token = JWT.encode(payload, SECRET,'HS256')
 		json_token = JSON.generate("token"=>token )
 		puts json_token
@@ -82,13 +89,13 @@ post "/api/v3/login" do
 
 
 
-  delete "/api/v3/login" do
+  delete "/login" do
 	redirect '/'
   end
 
 
 
-  post "/api/v3/login/old" do
+  post "/login/old" do
 	role = ""
 	puts "#{params[:username]}"
 	puts "#{params[:password]}"

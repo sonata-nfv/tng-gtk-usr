@@ -1,14 +1,14 @@
-    get '/api/v3/users' do
+    get '/users' do
         @users = User.all
         @users.to_json     
     end
 
-    get '/api/v3/users/:username' do
+    get '/users/:username' do
         @user = User.find_by_username(params[:username])
         @user.to_json
     end
 
-    post '/api/v3/users' do
+    post '/users' do
 
         new_user_body = JSON.parse(request.body.read)
     
@@ -68,7 +68,7 @@
       end
 
 
-  post '/api/v3/users/old' do
+  post '/users/old' do
 
     new_user_body = JSON.parse(request.body.read)
 
@@ -104,11 +104,11 @@
 
 
 
-post '/api/v3/users/:username/password' do
+post '/users/:username/password' do
     role = ""
     status = ""
-    puts request.env["HTTP_TOKEN"]
-    decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+    puts request.env["HTTP_AUTHORIZATION"]
+    decoded_token = JWT.decode(request.env["HTTP_AUTHORIZATION"], SECRET)
 
     decoded = decoded_token.to_json
 
@@ -162,10 +162,10 @@ post '/api/v3/users/:username/password' do
 end
 
 
-get '/api/v3/users/:username/endpoints' do
+get '/users/:username/endpoints' do
 
-    puts request.env["HTTP_TOKEN"]
-    decoded_token = JWT.decode(request.env["HTTP_TOKEN"], SECRET)
+    puts request.env["HTTP_AUTHORIZATION"]
+    decoded_token = JWT.decode(request.env["HTTP_AUTHORIZATION"], SECRET)
 
     decoded = decoded_token.to_json
 
@@ -207,7 +207,7 @@ get '/api/v3/users/:username/endpoints' do
 end
 
 
-delete '/api/v3/users' do
+delete '/users' do
     @users = User.destroy_all
     msg = "All users deleted"
     return 200, msg.to_json

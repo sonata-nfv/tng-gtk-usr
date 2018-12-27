@@ -10,6 +10,14 @@ post "/login" do
 	@user = User.find_by_username(login_body['username'])
 	@typed_password = "#{login_body['password']}"
 
+
+	if !@user
+		msg = {"error:"=>"Wrong user or password"}
+		json_output = JSON.pretty_generate (msg)
+		puts json_output				
+		return 404, json_output
+	end
+
 	#@user = User.find_by_username(params[:username])
 	#@typed_password = "#{params[:password]}"
 	puts "typed_password"

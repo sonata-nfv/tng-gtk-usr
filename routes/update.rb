@@ -18,6 +18,8 @@
 
     @user = User.find_by_username( decoded_username )
     puts "token user decoded"
+
+
     #puts @user['username']
 
     if @user['role'] == "admin"
@@ -28,13 +30,17 @@
             #@user_for_status.to_json   
             return 200, @user_for_status['status']
         else 
-            msg="unregistered user"
-            return 404, msg.to_json
+            msg = {"error:"=>"Unregistered user"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output				
+            return 404, json_output            
         end
 
     else
-        msg="Admin token required"
-        return 401, msg.to_json
+        msg = {"error:"=>"Admin token required"}
+        json_output = JSON.pretty_generate (msg)
+        puts json_output				
+        return 401, json_output                
     end
 end
 
@@ -58,8 +64,14 @@ post '/users/:username/update' do
 
     @user = User.find_by_username( decoded_username )
     puts "token user decoded"
-    #puts @user['username']
-
+    
+	if !@user
+		msg = {"error:"=>"Wrong user"}
+		json_output = JSON.pretty_generate (msg)
+		puts json_output				
+		return 404, json_output
+    end
+    
     if @user['role'] == "admin"
 
         @user_for_update = User.find_by_username( username_for_status ) 
@@ -86,7 +98,10 @@ post '/users/:username/update' do
             user_for_update_4 = User.find_by_username(username_for_update).update_column(:password, new_password_encrypted)
             user_for_update_5 = User.find_by_username(username_for_update).update_column(:email, new_email)
 
-            return 200, "User info updated"
+            msg = {"Sucess:"=>"User info updated"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output                 
+            return 200, json_output
         end
     else 
         @user_for_update = User.find_by_username( username_for_status ) 
@@ -99,30 +114,27 @@ post '/users/:username/update' do
             new_email = new_body['email']
             puts new_status
             puts new_role
-
-            puts new_password
-            #new_password_encrypted = Digest::SHA1.hexdigest new_password
-            #puts "new password encrypted"
-            #puts new_password_encrypted            
-
+            puts new_password   
             puts new_email
             puts @user_for_update   
 
             user_for_update_2 = User.find_by_username(username_for_update).update_column(:status, new_status)
-            #user_for_update_3 = User.find_by_username(username_for_update).update_column(:role, new_role)
-            #user_for_update_4 = User.find_by_username(username_for_update).update_column(:password, new_password_encrypted)
             user_for_update_5 = User.find_by_username(username_for_update).update_column(:email, new_email)
 
             if new_role == "admin"  
-                msg="This user cannot select the admin role"
-                return 409, msg.to_json
+                msg = {"Error:"=>"This user cannot select the admin role"}
+                json_output = JSON.pretty_generate (msg)
+                puts json_output                 
+                return 409 , json_output
             else
                 user_for_update_3 = User.find_by_username(username_for_update).update_column(:role, new_role)
             end    
 
             if new_password == ""
-                msg="This user cannot let the password empty"
-                return 409, msg.to_json
+                msg = {"Error:"=>"This user cannot let the password empty"}
+                json_output = JSON.pretty_generate (msg)
+                puts json_output                 
+                return 409 , json_output                
             else
                 puts new_password
                 new_password_encrypted = Digest::SHA1.hexdigest new_password
@@ -131,11 +143,16 @@ post '/users/:username/update' do
                 user_for_update_4 = User.find_by_username(username_for_update).update_column(:password, new_password_encrypted) 
             end    
 
-
-            return 200, "User info updated"
+            msg = {"Sucess:"=>"User info updated"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output                 
+            return 200 , json_output                                            
+            
         else 
-            msg="unregistered user"
-            return 409, msg.to_json
+            msg = {"Error:"=>"Unregistered user"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output                 
+            return 409 , json_output                    
         end                               
     end
 end

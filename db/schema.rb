@@ -15,21 +15,10 @@ ActiveRecord::Schema.define(version: 2018_10_11_082137) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "pm_users", primary_key: "username", id: :string, limit: 40, force: :cascade do |t|
-    t.string "password", limit: 40
-    t.string "service_platform", limit: 40
-  end
-
   create_table "roles", id: false, force: :cascade do |t|
     t.string "role"
     t.string "endpoint"
     t.string "verbs"
-  end
-
-  create_table "service_platforms", primary_key: "name", id: :string, limit: 40, force: :cascade do |t|
-    t.string "host", limit: 255
-    t.string "type", limit: 40
-    t.string "service_token", limit: 256
   end
 
   create_table "users", primary_key: "username", id: :string, force: :cascade do |t|

@@ -40,8 +40,10 @@
             puts "vvvvv"
         else
             puts "invalid email"
-            msg="Invalid email"
-            return 409, msg.to_json
+            msg = {"Error:"=>"Invalid email"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output				
+            return 409, json_output             
         end
         puts "validating mail"
 
@@ -63,7 +65,10 @@
             #return 200, 'New User registered'   
             return 200, @post.to_json 
         else
-            return 409, 'User already exist'
+            msg = {"Error:"=>"User already exist"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output				
+            return 409, json_output              
         end
       end
 
@@ -149,15 +154,22 @@ post '/users/:username/password' do
 
             
             @user_for_password.update_attribute(:password, new_password_encrypted)
-            return 200, "User password updated"
+            msg = {"Success:"=>"User password updated"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output				
+            return 200, json_output             
         else 
-            msg="Unregistered user"
-            return 409, msg.to_json
+            msg = {"error:"=>"Unregistered user"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output				
+            return 409, json_output             
         end
 
     else
-        msg="Admin token required"
-        return 401, msg.to_json
+        msg = {"error:"=>"Admin token required"}
+        json_output = JSON.pretty_generate (msg)
+        puts json_output				
+        return 401, json_output         
     end
 end
 
@@ -196,20 +208,25 @@ get '/users/:username/endpoints' do
             @endpoints.to_json
 
         else 
-            msg="Unregistered user"
-            return 404, msg.to_json
+            msg = {"error:"=>"Unregistered user"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output				
+            return 404, json_output            
         end
 
     else
-        msg="Admin token required"
-        return 401, msg.to_json
+        msg = {"error:"=>"Admin token required"}
+        json_output = JSON.pretty_generate (msg)
+        puts json_output				
+        return 401, json_output
     end
 end
 
 
 delete '/users' do
     @users = User.destroy_all
-    msg = "All users deleted"
-    return 200, msg.to_json
-    #@users.to_json     
+    msg = {"Success:"=>"All users deleted"}
+    json_output = JSON.pretty_generate (msg)
+    puts json_output				
+    return 200, json_output
 end

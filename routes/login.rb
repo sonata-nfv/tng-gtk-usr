@@ -90,8 +90,10 @@ post "/login" do
 		token = JWT.encode(payload, SECRET,'HS256')
 		return 200, token.to_json
 	else
-		msg="Unregistered user"
-		return 404, msg.to_json
+		msg = {"Error:"=>"Unregistered user"}
+		json_output = JSON.pretty_generate (msg)
+		puts json_output				
+		return 404, json_output 	
 	end
   end
 

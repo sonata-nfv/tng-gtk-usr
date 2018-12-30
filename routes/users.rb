@@ -203,7 +203,8 @@ get '/users/:username/endpoints' do
             role = @user_for_endpoints['role']
 
             #@endpoints = Role.where(role: role )
-            @endpoints = Role.where(role: role ).select("endpoint").all
+            #@endpoints = Role.where(role: role ).select("endpoint").all
+            @endpoints = Role.where(role: role ).select("endpoint", "verbs").all
 
             @endpoints.to_json
 

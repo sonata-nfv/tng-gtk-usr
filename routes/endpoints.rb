@@ -36,21 +36,26 @@ delete '/endpoints' do
         #puts @post.to_json
 
         if @post
-            @post = Role.find_by( role: new_endpoint_role, endpoint: new_endpoint_endpoint, verbs: new_endpoint_verbs )
-            
-            #@post = Role.destroy_all(role: new_endpoint_role, endpoint: new_endpoint_endpoint, verbs: new_endpoint_verbs) 
+            @post = Role.find_by( role: new_endpoint_role, endpoint: new_endpoint_endpoint, verbs: new_endpoint_verbs )                        
             
             Role.where(role: new_endpoint_role, endpoint: new_endpoint_endpoint, verbs: new_endpoint_verbs).delete_all
             
-            #@post.delete    
-            return 200, 'Endpoint Deleted'   
+            msg = {"Success:"=>"Endpoint Deleted"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output				
+            return 200, json_output   
         else
-            return 409, 'Wrong endpoint values'
+            msg = {"Error:"=>"Wrong endpoint values"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output				
+            return 409, json_output             
         end
 
     else
-        msg="Admin token required"
-        return 401, msg.to_json
+        msg = {"Error:"=>"Admin token required"}
+        json_output = JSON.pretty_generate (msg)
+        puts json_output				
+        return 401, json_output         
     end
 end
 
@@ -87,14 +92,22 @@ post '/endpoints' do
 
         if (new_endpoint_role == 'admin') || (new_endpoint_role == 'developer') || (new_endpoint_role == 'customer')
             @post.save    
-            return 200, 'New Endpoint Registered'   
+            msg = {"Success:"=>"New Endpoint Registered"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output				
+            return 200, json_output             
         else
-            return 409, 'Wrong role'
+            msg = {"Error:"=>"Wrong role"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output				
+            return 409, json_output             
         end
 
     else
-        msg="Admin token required"
-        return 401, msg.to_json
+        msg = {"Error:"=>"Admin token required"}
+        json_output = JSON.pretty_generate (msg)
+        puts json_output				
+        return 401, json_output         
     end
 end
 
@@ -134,13 +147,17 @@ get '/endpoints/:username' do
             @endpoints.to_json
 
         else 
-            msg="Unregistered user"
-            return 404, msg.to_json
+            msg = {"Error:"=>"Ungeristered User"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output				
+            return 404, json_output         
         end
 
     else
-        msg="Admin token required"
-        return 404, msg.to_json
+        msg = {"Error:"=>"Admin token required"}
+        json_output = JSON.pretty_generate (msg)
+        puts json_output				
+        return 401, json_output         
     end
 end
 

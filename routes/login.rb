@@ -42,7 +42,7 @@ post "/login" do
 		puts ep
 
 
-		payload = { username: login_body['username'], email: @user['email'], endpoints: ep , login_time: t_now, expiration_time: t_60}
+		payload = { username: login_body['username'], email: @user['email'], role: role, endpoints: ep , login_time: t_now, expiration_time: t_60}
 		token = JWT.encode(payload, SECRET,'HS256')
 		json_token = JSON.generate("token"=>token )
 		puts json_token

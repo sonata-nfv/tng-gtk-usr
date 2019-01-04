@@ -15,6 +15,7 @@ require_relative 'routes/role'
 require_relative 'routes/status'
 require_relative 'routes/endpoints'
 require_relative 'routes/update'
+require_relative 'routes/roles'
 
 DB_PARAMS = {
 #  host: 'son-postgres',
@@ -39,6 +40,9 @@ class Role < ActiveRecord::Base
   validates_presence_of :role
 end
 
+class Profile < ActiveRecord::Base
+  validates_presence_of :role
+end
 
 configure :development do
   set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'gatekeeper', pool: 2, username: 'sonatatest', password: 'sonata', host: 'son-postgres'}

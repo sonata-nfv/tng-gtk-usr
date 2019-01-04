@@ -1,7 +1,7 @@
-    get '/roles' do
-        @roles = Role.all
-        @roles.to_json      
-    end
+#    get '/roles' do
+#        @roles = Role.all
+#        @roles.to_json      
+#   end
 
     get '/users/:username/role' do
         role = ""

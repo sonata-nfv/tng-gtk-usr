@@ -52,11 +52,3 @@ configure :production do
   set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'gatekeeper', pool: 2, username: 'sonatatest', password: 'sonata', host: 'son-postgres'}
 end
 
-
-  get '/' do
-	erb :init
-  end
-
-  get '/users_management' do
-	erb :users
-  end

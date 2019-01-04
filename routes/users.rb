@@ -58,17 +58,27 @@
         @post['status'] = "active"
         puts @post['status']
         #return @post.to_json
+
+        @role_exists = Profile.find_by_role( new_user_body['role'] ) 
     
         @exist = User.find_by_username(new_user_body['username'])
-        if !@exist
-            @post.save    
-            #return 200, 'New User registered'   
-            return 200, @post.to_json 
+
+        if @role_exists 
+            if !@exist
+                @post.save    
+                #return 200, 'New User registered'   
+                return 200, @post.to_json 
+            else
+                msg = {"Error:"=>"User already exist"}
+                json_output = JSON.pretty_generate (msg)
+                puts json_output				
+                return 409, json_output              
+            end
         else
-            msg = {"Error:"=>"User already exist"}
+            msg = {"Error:"=>"The selected role does not exists"}
             json_output = JSON.pretty_generate (msg)
             puts json_output				
-            return 409, json_output              
+            return 404, json_output
         end
       end
 

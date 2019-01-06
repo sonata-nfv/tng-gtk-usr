@@ -13,7 +13,8 @@ require_relative 'routes/login'
 require_relative 'routes/users'
 require_relative 'routes/role'
 require_relative 'routes/status'
-require_relative 'routes/endpoints'
+#require_relative 'routes/endpoints'
+require_relative 'routes/permissions'
 require_relative 'routes/update'
 require_relative 'routes/roles'
 
@@ -40,7 +41,7 @@ class Role < ActiveRecord::Base
   validates_presence_of :role
 end
 
-class Profile < ActiveRecord::Base
+class Permission < ActiveRecord::Base
   validates_presence_of :role
 end
 

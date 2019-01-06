@@ -1,10 +1,10 @@
     get '/roles' do
-        @roles = Profile.all
+        @roles = Role.all
         return 200, @roles.to_json      
     end
 
     get '/roles/:role' do
-        @role = Profile.find_by_role(params[:role])
+        @role = Role.find_by_role(params[:role])
         if @role
             return 200, @role.to_json 
         else
@@ -42,9 +42,9 @@
             new_role_description = new_role_body['description']
             puts new_role_description                        
             
-            @post = Profile.new( new_role_body )
+            @post = Role.new( new_role_body )
 
-            @exist = Profile.find_by_role( new_role_body['role'] ) 
+            @exist = Role.find_by_role( new_role_body['role'] ) 
             
             if !@exist
                 puts "Registering new role..."
@@ -88,7 +88,7 @@
             delete_role = params[:role]
             puts delete_role
 
-            @exist = Profile.find_by_role( delete_role ) 
+            @exist = Role.find_by_role( delete_role ) 
             
             if !@exist
                 msg = {"Error:"=>"Role does not exists"}
@@ -98,7 +98,7 @@
             else
                 puts "Deleting role..."
                 #@exists.delete
-                Profile.find_by_role( delete_role ).delete
+                Role.find_by_role( delete_role ).delete
                 msg = {"Success:"=>"Role deleted"}
                 json_output = JSON.pretty_generate (msg)
                 puts json_output                

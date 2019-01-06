@@ -15,14 +15,14 @@ ActiveRecord::Schema.define(version: 2018_10_11_082137) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "profiles", primary_key: "role", id: :string, force: :cascade do |t|
-    t.string "description"
-  end
-
-  create_table "roles", id: false, force: :cascade do |t|
+  create_table "permissions", id: false, force: :cascade do |t|
     t.string "role"
     t.string "endpoint"
     t.string "verbs"
+  end
+
+  create_table "roles", primary_key: "role", id: :string, force: :cascade do |t|
+    t.string "description"
   end
 
   create_table "users", primary_key: "username", id: :string, force: :cascade do |t|

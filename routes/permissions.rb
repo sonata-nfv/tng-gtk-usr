@@ -1,5 +1,5 @@
 get '/endpoints' do
-    @roles = Role.all
+    @roles = Permission.all
     @roles.to_json
 end
 
@@ -31,14 +31,14 @@ delete '/endpoints' do
         new_endpoint_verbs = new_endpoint_body['verbs']
         puts new_endpoint_verbs               
         
-        #@post = Role.new( new_endpoint_body )
-        @post = Role.find_by( role: new_endpoint_role, endpoint: new_endpoint_endpoint, verbs: new_endpoint_verbs )
+        #@post = Permission.new( new_endpoint_body )
+        @post = Permission.find_by( role: new_endpoint_role, endpoint: new_endpoint_endpoint, verbs: new_endpoint_verbs )
         #puts @post.to_json
 
         if @post
-            @post = Role.find_by( role: new_endpoint_role, endpoint: new_endpoint_endpoint, verbs: new_endpoint_verbs )                        
+            @post = Permission.find_by( role: new_endpoint_role, endpoint: new_endpoint_endpoint, verbs: new_endpoint_verbs )                        
             
-            Role.where(role: new_endpoint_role, endpoint: new_endpoint_endpoint, verbs: new_endpoint_verbs).delete_all
+            Permission.where(role: new_endpoint_role, endpoint: new_endpoint_endpoint, verbs: new_endpoint_verbs).delete_all
             
             msg = {"Success:"=>"Endpoint Deleted"}
             json_output = JSON.pretty_generate (msg)
@@ -88,9 +88,12 @@ post '/endpoints' do
         new_endpoint_verbs = new_endpoint_body['verbs']
         puts new_endpoint_verbs               
         
-        @post = Role.new( new_endpoint_body )
+        @post = Permission.new( new_endpoint_body )
 
-        if (new_endpoint_role == 'admin') || (new_endpoint_role == 'developer') || (new_endpoint_role == 'customer')
+        @role_exists = Role.find_by_role( new_endpoint_body['role'] ) 
+
+        if @role_exists
+        #if (new_endpoint_role == 'admin') || (new_endpoint_role == 'developer') || (new_endpoint_role == 'customer')
             @post.save    
             msg = {"Success:"=>"New Endpoint Registered"}
             json_output = JSON.pretty_generate (msg)
@@ -140,9 +143,9 @@ get '/endpoints/:username' do
             puts @user_for_endpoints['role']
             role = @user_for_endpoints['role']
 
-            #@endpoints = Role.where(role: role )
-            #@endpoints = Role.where(role: role ).select("endpoint").all
-            @endpoints = Role.where(role: role ).select("endpoint", "verbs").all
+            #@endpoints = Permission.where(role: role )
+            #@endpoints = Permission.where(role: role ).select("endpoint").all
+            @endpoints = Permission.where(role: role ).select("endpoint", "verbs").all
 
             @endpoints.to_json
 
@@ -189,7 +192,7 @@ post '/endpoints-validate' do
 	if pwd == @user['password']				
 
         role = @user['role']
-        @endpoints = Role.where(role: role ).select("endpoint", "verbs").all
+        @endpoints = Permission.where(role: role ).select("endpoint", "verbs").all
         return 200, @endpoints.to_json
 
 	else		

@@ -59,7 +59,7 @@
         puts @post['status']
         #return @post.to_json
 
-        @role_exists = Profile.find_by_role( new_user_body['role'] ) 
+        @role_exists = Role.find_by_role( new_user_body['role'] ) 
     
         @exist = User.find_by_username(new_user_body['username'])
 
@@ -214,7 +214,7 @@ get '/users/:username/endpoints' do
 
             #@endpoints = Role.where(role: role )
             #@endpoints = Role.where(role: role ).select("endpoint").all
-            @endpoints = Role.where(role: role ).select("endpoint", "verbs").all
+            @endpoints = Permission.where(role: role ).select("endpoint", "verbs").all
 
             @endpoints.to_json
 

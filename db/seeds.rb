@@ -1,5 +1,5 @@
 
-Profile.create!([{
+Role.create!([{
   role: "admin",
   description: "admin role default description"
 }])

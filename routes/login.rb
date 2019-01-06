@@ -36,7 +36,7 @@ post "/login" do
 		#payload = { username: "#{params[:username]}", email: @user['email'], login_time: t_now, expiration_time: t_60}
 
         role = @user['role']
-		endpoints = Role.where(role: role ).select("endpoint", "verbs").all
+		endpoints = Permission.where(role: role ).select("endpoint", "verbs").all
 
 		ep = JSON.parse (endpoints.to_json)
 		puts ep
@@ -62,7 +62,7 @@ post "/login" do
 
 
         role = @user['role']
-		endpoints = Role.where(role: role ).select("endpoint", "verbs").all
+		endpoints = Permission.where(role: role ).select("endpoint", "verbs").all
 
 		ep = JSON.parse (endpoints.to_json)
 		puts ep

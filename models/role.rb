@@ -1,3 +1,2 @@
-class Profile < ActiveRecord::Base
-    set_primary_key :role
+class Role < ActiveRecord::Base
 end

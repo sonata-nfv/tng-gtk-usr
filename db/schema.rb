@@ -15,8 +15,9 @@ ActiveRecord::Schema.define(version: 2018_10_11_082137) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "permissions", primary_key: "endpoint", id: :string, force: :cascade do |t|
+  create_table "permissions", id: false, force: :cascade do |t|
     t.string "role"
+    t.string "endpoint"
     t.string "verbs"
   end
 

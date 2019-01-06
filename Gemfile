@@ -10,6 +10,7 @@ gem 'json'
 gem 'bcrypt'
 #gem 'digest'
 gem 'email_validator'
+gem 'composite_primary_keys'
 
 gem 'net-ldap'
 gem 'haml'

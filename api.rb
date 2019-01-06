@@ -8,6 +8,7 @@ require 'rake'
 require 'bcrypt'
 require 'digest/sha1'
 require 'email_validator'
+require 'composite_primary_keys'
 
 require_relative 'routes/login'
 require_relative 'routes/users'

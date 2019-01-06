@@ -88,7 +88,10 @@ post '/endpoints' do
         new_endpoint_verbs = new_endpoint_body['verbs']
         puts new_endpoint_verbs               
         
-        @endpoint_exists = Permission.find_by_endpoint( new_endpoint_body['endpoint'] )
+        #@endpoint_exists = Permission.find_by_endpoint( new_endpoint_body['endpoint'] )
+        @endpoint_exists = Permission.find_by( endpoint: new_endpoint_body['endpoint'] , verbs: new_endpoint_body['verbs']  )
+        
+
         if @endpoint_exists
             msg = {"Error:"=>"Endpoint already exits"}
             json_output = JSON.pretty_generate (msg)
@@ -108,7 +111,7 @@ post '/endpoints' do
             puts json_output				
             return 200, json_output             
         else
-            msg = {"Error:"=>"Wrong role"}
+            msg = {"Error:"=>"Role does not exists"}
             json_output = JSON.pretty_generate (msg)
             puts json_output				
             return 409, json_output             

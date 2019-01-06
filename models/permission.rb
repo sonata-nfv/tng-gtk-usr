@@ -1,3 +1,3 @@
-class Role < ActiveRecord::Base
-    set_primary_key :endpoint    
+class Permission < ActiveRecord::Base
+    set_primary_key :role    
 end

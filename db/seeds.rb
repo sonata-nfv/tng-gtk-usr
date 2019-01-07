@@ -1,9 +1,9 @@
-
-Role.create!([{
-  role: "admin",
-  description: "admin role default description"
-}])
-
+unless Role.exists?('admin')
+  Role.create!([{
+    role: "admin",
+    description: "admin role default description"
+  }])
+end
 
 pwd = Digest::SHA1.hexdigest "t4ng0"
 

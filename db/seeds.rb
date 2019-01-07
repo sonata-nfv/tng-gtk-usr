@@ -5,14 +5,15 @@ unless Role.exists?('admin')
   }])
 end
 
-pwd = Digest::SHA1.hexdigest "t4ng0"
+unless User.exists?('tango')
+  pwd = Digest::SHA1.hexdigest "t4ng0"
 
-User.create!([{
-  username: "tango",
-  name: "tango",
-  password: pwd,
-  email: "tango@tango.com",
-  role: "admin",
-  status: "active"  
-}])
-
+  User.create!([{
+    username: "tango",
+    name: "tango",
+    password: pwd,
+    email: "tango@tango.com",
+    role: "admin",
+    status: "active"  
+  }])
+end

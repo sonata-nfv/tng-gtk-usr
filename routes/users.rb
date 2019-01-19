@@ -1,79 +1,75 @@
-    get '/users' do
-        @users = User.all
-        @users.to_json     
-    end
+require_relative '../models/user'
 
-    get '/users/:username' do
-        @user = User.find_by_username(params[:username])
-        @user.to_json
-    end
+get '/users' do
+  @users = User.all
+  @users.to_json     
+end
 
-    post '/users' do
+get '/users/:username' do
+  @user = User.find_by_username(params[:username])
+  @user.to_json
+end
 
-        new_user_body = JSON.parse(request.body.read)
+post '/users' do
+
+  new_user_body = JSON.parse(request.body.read)
     
-        @username = new_user_body['username']
-        @name = new_user_body['name']
-        @password = new_user_body['password']
-        @email = new_user_body['email']
-        @role = new_user_body['role']
-        #@status = new_user_body['status']
-
+  @username = new_user_body['username']
+  @name = new_user_body['name']
+  @password = new_user_body['password']
+  @email = new_user_body['email']
+  @role = new_user_body['role']
+  #@status = new_user_body['status']
         
-        pwd = Digest::SHA1.hexdigest @password.to_s
-        puts "this is the login encrypted password"
-        puts pwd   
-        puts " "
+  pwd = Digest::SHA1.hexdigest @password.to_s
+  puts "this is the login encrypted password: #{pwd}"
+  puts "#{self}"
 
-    
-        puts @username
-        puts @name
-        puts @password
-        puts @email
-        puts @role
-        #puts @status
-
-        puts "validating mail"            
-        validator =  EmailValidator.valid?(new_user_body['email'])
-        if validator
-            puts "valid email"
-            puts "vvvvv"
-        else
-            puts "invalid email"
-            msg = {"Error:"=>"Invalid email"}
-            json_output = JSON.pretty_generate (msg)
-            puts json_output				
-            return 409, json_output             
-        end
-        puts "validating mail"
+  puts "validating mail"            
+  validator =  EmailValidator.valid?(new_user_body['email'])
+  if validator
+    puts "valid email"
+    puts "vvvvv"
+  else
+    puts "invalid email"
+    msg = {"Error:"=>"Invalid email"}
+    json_output = JSON.pretty_generate (msg)
+    puts json_output				
+    return 409, json_output             
+  end
+  puts "validating mail"
 
         #new_user_body = JSON.parse(request.body.read)
         @post = User.new( new_user_body )
 
         @post['password'] = pwd
 
-        puts "password from object"
-        puts @post['password']
-        puts @post['status']
-        @post['status'] = "active"
-        puts @post['status']
+        puts "password from object #{@post['password']}"
+        puts "status #{@post['status']}"
         #return @post.to_json
 
         @role_exists = Role.find_by_role( new_user_body['role'] ) 
     
-        @exist = User.find_by_username(new_user_body['username'])
-
         if @role_exists 
-            if !@exist
-                @post.save    
-                #return 200, 'New User registered'   
-                return 200, @post.to_json 
-            else
-                msg = {"Error:"=>"User already exist"}
-                json_output = JSON.pretty_generate (msg)
-                puts json_output				
-                return 409, json_output              
+          @post.role = new_user_body['role'] #@role_exists
+          unless User.find_by_username(new_user_body['username'])
+            begin
+              @post.save!
+              #return 200, 'New User registered'   
+              return 200, @post.to_json
+            rescue => e
+              msg = {"Error:"=>"User saving failled"}
+              STDERR.puts ">>>> #{e.message}\n#{e.backtrace.join("\n\t")}"
+              json_output = JSON.pretty_generate (msg)
+              puts json_output				
+              return 500, json_output  
             end
+          else
+            msg = {"Error:"=>"User already exist"}
+            json_output = JSON.pretty_generate (msg)
+            puts json_output				
+            return 409, json_output              
+          end
         else
             msg = {"Error:"=>"The selected role does not exists"}
             json_output = JSON.pretty_generate (msg)
@@ -159,9 +155,6 @@ post '/users/:username/password' do
             luis = Digest::SHA1.hexdigest 'luis'
             puts "luis encrypted"
             puts luis
-
-
-
             
             @user_for_password.update_attribute(:password, new_password_encrypted)
             msg = {"Success:"=>"User password updated"}

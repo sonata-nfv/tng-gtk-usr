@@ -30,6 +30,7 @@ DB_PARAMS = {
 
 SECRET = 'my_secret' 
 
+=begin
 class YourApplication < Sinatra::Base
   register Sinatra::ActiveRecordExtension
 end
@@ -45,12 +46,12 @@ end
 class Permission < ActiveRecord::Base
   validates_presence_of :role
 end
+=end
+#configure :development do
+#  set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'gatekeeper', pool: 2, username: 'sonatatest', password: 'sonata', host: 'son-postgres'}
+#end
 
-configure :development do
-  set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'gatekeeper', pool: 2, username: 'sonatatest', password: 'sonata', host: 'son-postgres'}
-end
-
-configure :production do
-  set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'gatekeeper', pool: 2, username: 'sonatatest', password: 'sonata', host: 'son-postgres'}
-end
+#configure :production do
+#  set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'gatekeeper', pool: 2, username: 'sonatatest', password: 'sonata', host: 'son-postgres'}
+#end
 

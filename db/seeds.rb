@@ -1,3 +1,4 @@
+=begin
 unless Role.exists?('admin')
   Role.create!([{
     role: "admin",
@@ -8,12 +9,13 @@ end
 unless User.exists?('tango')
   pwd = Digest::SHA1.hexdigest "t4ng0"
 
-  User.create!([{
+  user=User.create!({
     username: "tango",
     name: "tango",
     password: pwd,
     email: "tango@tango.com",
-    role: "admin",
     status: "active"  
-  }])
+  })
+  user.role = 'admin'
 end
+=end

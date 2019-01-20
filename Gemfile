@@ -55,6 +55,7 @@ gem 'composite_primary_keys', '11.0.3'
 gem 'net-ldap'
 gem 'haml'
 
+gem 'tng-gtk-utils', '0.4.1'
 
 group :test do
   gem 'guard', '2.15.0'

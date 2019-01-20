@@ -92,6 +92,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
+    redis (4.1.0)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
@@ -140,6 +141,8 @@ GEM
     thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.9)
+    tng-gtk-utils (0.4.1)
+      redis (~> 4.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     unicode-display_width (1.4.1)
@@ -172,6 +175,7 @@ DEPENDENCIES
   sinatra-activerecord (= 2.0.13)
   sinatra-contrib (= 2.0.2)
   thin (= 1.7.2)
+  tng-gtk-utils (= 0.4.1)
 
 RUBY VERSION
    ruby 2.4.3p205

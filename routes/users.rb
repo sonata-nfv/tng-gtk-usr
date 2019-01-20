@@ -1,3 +1,37 @@
+## Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+## ALL RIGHTS RESERVED.
+##
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##
+##     http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##
+## Neither the name of the SONATA-NFV, 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+## nor the names of its contributors may be used to endorse or promote
+## products derived from this software without specific prior written
+## permission.
+##
+## This work has been performed in the framework of the SONATA project,
+## funded by the European Commission under Grant number 671517 through
+## the Horizon 2020 and 5G-PPP programmes. The authors would like to
+## acknowledge the contributions of their colleagues of the SONATA
+## partner consortium (www.sonata-nfv.eu).
+##
+## This work has been performed in the framework of the 5GTANGO project,
+## funded by the European Commission under Grant number 761493 through
+## the Horizon 2020 and 5G-PPP programmes. The authors would like to
+## acknowledge the contributions of their colleagues of the 5GTANGO
+## partner consortium (www.5gtango.eu).
+# frozen_string_literal: true
+# encoding: utf-8
+require 'tng/gtk/utils'
 require_relative '../models/user'
 
 get '/users' do
@@ -12,71 +46,47 @@ end
 
 post '/users' do
 
-  new_user_body = JSON.parse(request.body.read)
-    
-  @username = new_user_body['username']
-  @name = new_user_body['name']
-  @password = new_user_body['password']
-  @email = new_user_body['email']
-  @role = new_user_body['role']
-  #@status = new_user_body['status']
-        
-  pwd = Digest::SHA1.hexdigest @password.to_s
-  puts "this is the login encrypted password: #{pwd}"
-  puts "#{self}"
+  user = JSON.parse(request.body.read)
+  user['password'] =  Digest::SHA1.hexdigest(user['password'])
 
-  puts "validating mail"            
-  validator =  EmailValidator.valid?(new_user_body['email'])
-  if validator
+  # role will be saved as an association
+  role = user.delete('role')
+  puts "user=#{user.inspect}"
+
+  puts "validating mail"
+  if EmailValidator.valid?(user['email'])
     puts "valid email"
     puts "vvvvv"
   else
     puts "invalid email"
-    msg = {"Error:"=>"Invalid email"}
-    json_output = JSON.pretty_generate (msg)
-    puts json_output				
-    return 409, json_output             
+    msg = {error: "Invalid email: #{user[email]}"}			
+    return 409, msg.to_json             
   end
-  puts "validating mail"
 
-        #new_user_body = JSON.parse(request.body.read)
-        @post = User.new( new_user_body )
-
-        @post['password'] = pwd
-
-        puts "password from object #{@post['password']}"
-        puts "status #{@post['status']}"
-        #return @post.to_json
-
-        @role_exists = Role.find_by_role( new_user_body['role'] ) 
+  in_memory_role = Role.find_by_role( role ) 
     
-        if @role_exists 
-          @post.role = new_user_body['role'] #@role_exists
-          unless User.find_by_username(new_user_body['username'])
-            begin
-              @post.save!
-              #return 200, 'New User registered'   
-              return 200, @post.to_json
-            rescue => e
-              msg = {"Error:"=>"User saving failled"}
-              STDERR.puts ">>>> #{e.message}\n#{e.backtrace.join("\n\t")}"
-              json_output = JSON.pretty_generate (msg)
-              puts json_output				
-              return 500, json_output  
-            end
-          else
-            msg = {"Error:"=>"User already exist"}
-            json_output = JSON.pretty_generate (msg)
-            puts json_output				
-            return 409, json_output              
-          end
-        else
-            msg = {"Error:"=>"The selected role does not exists"}
-            json_output = JSON.pretty_generate (msg)
-            puts json_output				
-            return 404, json_output
-        end
+  if in_memory_role 
+    unless User.find_by_username(user['username'])
+      begin
+        in_memory_user = User.new( user )
+        STDERR.puts "in_memory_user=#{in_memory_user.inspect}"
+        in_memory_user.role = in_memory_role
+        STDERR.puts "in_memory_user=#{in_memory_user.inspect}"
+        in_memory_user.save!
+        return 200, in_memory_user.to_json
+      rescue => e
+        msg = {error:"User saving failled: #{e.message}\n#{e.backtrace.join("\n\t")}"}
+        return 500, msg.to_json  
       end
+    else
+      msg = {error: "User #{user['username']} already exist"}
+      return 409, msg.to_json              
+    end
+  else
+    msg = {error:"Role #{role} does not exist"}
+    return 404, msg.to_json
+  end
+end
 
 
   post '/users/old' do

@@ -63,6 +63,8 @@ group :test do
   gem 'guard-bundler'
   gem 'growl'
   gem 'rb-fsevent'
+  gem 'rack-test', '0.8.2'
+  gem 'response_code_matchers', '0.1.0'
 end
 
 

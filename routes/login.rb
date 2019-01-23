@@ -6,6 +6,8 @@ post "/login" do
   return 400, {error: "Passord is required"}.to_json unless (params.key?(:password) && !params[:password].empty?)
 	
 	user = User.find_by(username:params[:username]).as_json
+  STDERR.puts "user=#{user}"
+  STDERR.puts "#{user[:password]}|#{Digest::SHA1.hexdigest(params[:password])}"
 	return 404, {error: "Wrong user or password"}.to_json unless user
 	return 403, {error: "Unauthorized, wrong user or password"}.to_json unless user[:password] == Digest::SHA1.hexdigest(params[:password])
 	t_now = Time.now			

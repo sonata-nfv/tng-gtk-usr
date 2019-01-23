@@ -1,7 +1,7 @@
 post "/login" do
   body = request.body.read
   return 400, {error: "User name and password are required parameters"}.to_json if body.empty?
-  params=JSON.parse(body)
+  params=JSON.parse(body, symbolize_names: true)
   return 400, {error: "User name is required"}.to_json unless (params.key?(:username) && !params[:username].empty?)
   return 400, {error: "Passord is required"}.to_json unless (params.key?(:password) && !params[:password].empty?)
 	

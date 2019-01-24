@@ -12,7 +12,6 @@ require 'composite_primary_keys'
 
 require_relative 'routes/login'
 require_relative 'routes/users'
-require_relative 'routes/role'
 require_relative 'routes/status'
 #require_relative 'routes/endpoints'
 require_relative 'routes/permissions'

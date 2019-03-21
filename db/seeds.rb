@@ -45,9 +45,9 @@ end
 
 User.find_or_create_by(username: 'tango') do |admin_user|
   STDOUT.puts "Adding 'tango' user ('admin' role -- please use this user to loging, create (an)other user(s) and chenge some to 'admin' role)..."
-  admin_user.password = Digest::SHA1.hexdigest 't4ng0'
-  admin_user.name = '5GTANGO'
-  admin_user.email = 'tango@tango.com'
+  admin_user.password = Digest::SHA1.hexdigest 'admin'
+  admin_user.name = '5GTANGO admin user'
+  admin_user.email = 'support@sonata-nfv.eu'
   admin_user.status = 'active'
   admin_user.role = roles[:admin]
 end

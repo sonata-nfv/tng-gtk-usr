@@ -87,12 +87,16 @@ GEM
     rack (2.0.6)
     rack-protection (2.0.2)
       rack
+    rack-test (0.8.2)
+      rack (>= 1.0, < 3)
     rainbow (3.0.0)
     rake (12.3.0)
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
     redis (4.1.0)
+    response_code_matchers (0.1.0)
+      rack
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
@@ -167,8 +171,10 @@ DEPENDENCIES
   net-ldap
   pg (= 0.21.0)
   pry (= 0.12.0)
+  rack-test (= 0.8.2)
   rake (= 12.3.0)
   rb-fsevent
+  response_code_matchers (= 0.1.0)
   rubocop (= 0.52.0)
   rubocop-checkstyle_formatter (= 0.4.0)
   sinatra (= 2.0.2)

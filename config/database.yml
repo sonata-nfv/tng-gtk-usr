@@ -35,8 +35,8 @@ common_settings: &common_settings
   host: <%= ENV['DATABASE_HOST'] || 'son-postgres' %>
   port: <%= ENV['DATABASE_PORT'] || 5432 %>
   database: <%= ENV['DATABASE_NAME'] || 'gatekeeper' %>
-  username: <%= ENV['POSTGRES_USER'] || 'postgres' %>
-  password: <%= ENV['POSTGRES_PASSWORD'] || 'sonatatest' %>
+  username: <%= ENV['POSTGRES_USER'] || 'sonatatest' %>
+  password: <%= ENV['POSTGRES_PASSWORD'] || 'sonata' %>
   pool: 64
   encoding: unicode
   #url: <%= ENV['DATABASE_URL'] %>

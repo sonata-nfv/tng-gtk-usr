@@ -34,9 +34,13 @@
 require 'tng/gtk/utils'
 require_relative '../models/user'
 
+
+
 get '/users' do
   @users = User.all
-  @users.to_json     
+  #puts @users.to_json
+  Tng::Gtk::Utils::Logger.debug(component:'users', operation:'getting all users', message:@users.to_json)     
+  @users.to_json
 end
 
 get '/users/:username' do
@@ -51,14 +55,16 @@ post '/users' do
 
   # role will be saved as an association
   role = user.delete('role')
-  puts "user=#{user.inspect}"
+  #puts "user=#{user.inspect}"
+  Tng::Gtk::Utils::Logger.debug(component:'users', operation:'user from body', message:user='user=#{user.inspect}') 
 
   puts "validating mail"
   if EmailValidator.valid?(user['email'])
-    puts "valid email"
-    puts "vvvvv"
+    #puts "valid email"
+    Tng::Gtk::Utils::Logger.debug(component:'users', operation:'email', message:user="valid email") 
   else
-    puts "invalid email"
+    #puts "invalid email"
+    Tng::Gtk::Utils::Logger.debug(component:'users', operation:'email', message:user="invalid email") 
     msg = {error: "Invalid email: #{user[email]}"}			
     return 409, msg.to_json             
   end
@@ -69,9 +75,11 @@ post '/users' do
     unless User.find_by_username(user['username'])
       begin
         in_memory_user = User.new( user )
-        STDERR.puts "in_memory_user=#{in_memory_user.inspect}"
+        #STDERR.puts "in_memory_user=#{in_memory_user.inspect}"
+        Tng::Gtk::Utils::Logger.debug(component:'users', operation:'save user', message:user="in_memory_user=#{in_memory_user.inspect}") 
         in_memory_user.role = in_memory_role
-        STDERR.puts "in_memory_user=#{in_memory_user.inspect}"
+        #STDERR.puts "in_memory_user=#{in_memory_user.inspect}"
+        Tng::Gtk::Utils::Logger.debug(component:'users', operation:'save role', message:user="in_memory_user=#{in_memory_user.inspect}") 
         in_memory_user.save!
         return 200, in_memory_user.to_json
       rescue => e
@@ -128,7 +136,8 @@ end
 post '/users/:username/password' do
     role = ""
     status = ""
-    puts request.env["HTTP_AUTHORIZATION"]
+    #puts request.env["HTTP_AUTHORIZATION"]
+    Tng::Gtk::Utils::Logger.debug(component:'users', operation:'password', message:user=request.env["HTTP_AUTHORIZATION"]) 
     decoded_token = JWT.decode(request.env["HTTP_AUTHORIZATION"], SECRET)
 
     decoded = decoded_token.to_json
@@ -137,12 +146,15 @@ post '/users/:username/password' do
 
     decoded_username = parsed[0]['username']
     username_for_password = "#{params[:username]}"
-    puts "decoded user : " + decoded_username.to_s    
-    puts "user for password : " + username_for_password.to_s
+    #puts "decoded user : " + decoded_username.to_s  
+    Tng::Gtk::Utils::Logger.debug(component:'users', operation:'password', message:user=decoded_username.to_s)   
+    #puts "user for password : " + username_for_password.to_s
+    Tng::Gtk::Utils::Logger.debug(component:'users', operation:'password', message:username_for_password.to_s)
 
 
     @user = User.find_by_username( decoded_username )
-    puts "token user decoded"
+    #puts "token user decoded"
+    Tng::Gtk::Utils::Logger.debug(component:'users', operation:'password', message:"token user decoded")
     #puts @user['username']
 
     if @user['role'] == "admin"
@@ -154,34 +166,41 @@ post '/users/:username/password' do
 
 
             new_password_body = JSON.parse(request.body.read)
-            puts new_password_body
+            #puts new_password_body
+            Tng::Gtk::Utils::Logger.debug(component:'users', operation:'password', message:new_password_body)
             new_password = new_password_body['password']
-            puts new_password
+            #puts new_password
+            Tng::Gtk::Utils::Logger.debug(component:'users', operation:'password', message:new_password)
 
             new_password_encrypted = Digest::SHA1.hexdigest new_password
-            puts "new password encrypted"
-            puts new_password_encrypted
+            #puts "new password encrypted"
+            #Tng::Gtk::Utils::Logger.debug(component:'users', operation:'password', message:"new password encrypted")
+            #puts new_password_encrypted
+            Tng::Gtk::Utils::Logger.debug(component:'users', operation:'password', message:new_password_encrypted)
 
-            luis = Digest::SHA1.hexdigest 'luis'
-            puts "luis encrypted"
-            puts luis
+            #luis = Digest::SHA1.hexdigest 'luis'
+            #puts "luis encrypted"
+            #puts luis
             
             @user_for_password.update_attribute(:password, new_password_encrypted)
             msg = {"Success:"=>"User password updated"}
             json_output = JSON.pretty_generate (msg)
-            puts json_output				
+            #puts json_output
+            Tng::Gtk::Utils::Logger.debug(component:'users', operation:'password', message:json_output)				
             return 200, json_output             
         else 
             msg = {"error:"=>"Unregistered user"}
             json_output = JSON.pretty_generate (msg)
-            puts json_output				
+            #puts json_output	
+            Tng::Gtk::Utils::Logger.debug(component:'users', operation:'password', message:json_output)				
             return 409, json_output             
         end
 
     else
         msg = {"error:"=>"Admin token required"}
         json_output = JSON.pretty_generate (msg)
-        puts json_output				
+        #puts json_output
+        Tng::Gtk::Utils::Logger.debug(component:'users', operation:'password', message:json_output)					
         return 401, json_output         
     end
 end
@@ -189,7 +208,8 @@ end
 
 get '/users/:username/endpoints' do
 
-    puts request.env["HTTP_AUTHORIZATION"]
+    #puts request.env["HTTP_AUTHORIZATION"]
+    Tng::Gtk::Utils::Logger.debug(component:'users', operation:'endpoints', message:request.env["HTTP_AUTHORIZATION"])	
     decoded_token = JWT.decode(request.env["HTTP_AUTHORIZATION"], SECRET)
 
     decoded = decoded_token.to_json
@@ -198,12 +218,14 @@ get '/users/:username/endpoints' do
 
     decoded_username = parsed[0]['username']
     username_for_endpoints = "#{params[:username]}"
-    puts "decoded user : " + decoded_username.to_s    
-    puts "user for endpoints : " + username_for_endpoints.to_s
+    #puts "decoded user : " + decoded_username.to_s
+    Tng::Gtk::Utils::Logger.debug(component:'users', operation:'endpoints', message:decoded_username.to_s)    
+    #puts "user for endpoints : " + username_for_endpoints.to_s
+    Tng::Gtk::Utils::Logger.debug(component:'users', operation:'endpoints', message:username_for_endpoints.to_s)
 
 
     @user = User.find_by_username( decoded_username )
-    puts "token user decoded"
+    #puts "token user decoded"
     #puts @user['username']
 
     if @user['role'] == "admin"
@@ -212,7 +234,8 @@ get '/users/:username/endpoints' do
 
         if @user_for_endpoints
 
-            puts @user_for_endpoints['role']
+            #puts @user_for_endpoints['role']
+            Tng::Gtk::Utils::Logger.debug(component:'users', operation:'endpoints', message:@user_for_endpoints['role'])
             role = @user_for_endpoints['role']
 
             #@endpoints = Role.where(role: role )
@@ -224,14 +247,16 @@ get '/users/:username/endpoints' do
         else 
             msg = {"error:"=>"Unregistered user"}
             json_output = JSON.pretty_generate (msg)
-            puts json_output				
+            #puts json_output
+            Tng::Gtk::Utils::Logger.debug(component:'users', operation:'endpoints', message:json_output) 				
             return 404, json_output            
         end
 
     else
         msg = {"error:"=>"Admin token required"}
         json_output = JSON.pretty_generate (msg)
-        puts json_output				
+        #puts json_output
+        Tng::Gtk::Utils::Logger.debug(component:'users', operation:'endpoints', message:json_output) 				
         return 401, json_output
     end
 end

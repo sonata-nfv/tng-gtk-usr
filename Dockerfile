@@ -3,7 +3,8 @@ FROM ruby:2.4.3
 WORKDIR /app
 ADD Gemfile /app/Gemfile
 ADD Gemfile.lock /app/Gemfile.lock
-RUN bundle install --system && apt-get update && apt-get install -y postgresql-contrib
+RUN printf "deb http://archive.debian.org/debian/ jessie main\ndeb-src http://archive.debian.org/debian/ jessie main\ndeb http://security.debian.org jessie/updates main\ndeb-src http://security.debian.org jessie/updates main" > /etc/apt/sources.list
+RUN apt-get update && apt-get install -y postgresql-contrib
 
 ADD . /app
 RUN bundle install --system

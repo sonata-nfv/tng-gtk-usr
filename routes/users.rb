@@ -51,48 +51,54 @@ end
 post '/users' do
 
   user = JSON.parse(request.body.read)
-  user['password'] =  Digest::SHA1.hexdigest(user['password'])
+  body = request.body.read
 
-  # role will be saved as an association
-  role = user.delete('role')
-  #puts "user=#{user.inspect}"
-  Tng::Gtk::Utils::Logger.debug(component:'users', operation:'user from body', message:user='user=#{user.inspect}') 
+  user['password'] =  Digest::SHA1.hexdigest(user['password']) 
+
+  role = user['role']
+  username = user['username']
 
   puts "validating mail"
-  if EmailValidator.valid?(user['email'])
-    #puts "valid email"
-    Tng::Gtk::Utils::Logger.debug(component:'users', operation:'email', message:user="valid email") 
+  email_to_validate = user['email']
+  puts email_to_validate
+
+  if EmailValidator.valid?(email_to_validate)    
+    puts "valid email"
+    Tng::Gtk::Utils::Logger.debug(component:'users', operation:'email', message:'user="valid email"') 
   else
     #puts "invalid email"
-    Tng::Gtk::Utils::Logger.debug(component:'users', operation:'email', message:user="invalid email") 
-    msg = {error: "Invalid email: #{user[email]}"}			
+    Tng::Gtk::Utils::Logger.debug(component:'users', operation:'email', message:'user="invalid email"') 
+    msg = {error: "Invalid email: #{user['email']}"}			
     return 409, msg.to_json             
   end
 
-  in_memory_role = Role.find_by_role( role ) 
-    
-  if in_memory_role 
-    unless User.find_by_username(user['username'])
-      begin
-        in_memory_user = User.new( user )
-        #STDERR.puts "in_memory_user=#{in_memory_user.inspect}"
-        Tng::Gtk::Utils::Logger.debug(component:'users', operation:'save user', message:user="in_memory_user=#{in_memory_user.inspect}") 
-        in_memory_user.role = in_memory_role
-        #STDERR.puts "in_memory_user=#{in_memory_user.inspect}"
-        Tng::Gtk::Utils::Logger.debug(component:'users', operation:'save role', message:user="in_memory_user=#{in_memory_user.inspect}") 
-        in_memory_user.save!
-        return 200, in_memory_user.to_json
-      rescue => e
-        msg = {error:"User saving failled: #{e.message}\n#{e.backtrace.join("\n\t")}"}
-        return 500, msg.to_json  
-      end
+  in_memory_role = Role.find_by_role( role )  
+  existing_user = User.find_by_username( username )
+  
+  if in_memory_role
+    puts "Role Exists"    
+    if existing_user
+      puts "User exists"
+      msg = {error: "User #{username} already exist"}
+      return 409, msg.to_json 
     else
-      msg = {error: "User #{user['username']} already exist"}
-      return 409, msg.to_json              
+      puts "user does not exists"
+      new_user = User.new( )  
+      new_user['username'] = user['username']
+      new_user['name'] = user['name']
+      new_user['password'] = user['password']
+      new_user['email'] = user['email']
+      new_user['role'] = user['role']
+      new_user['status'] = user['status']
+      new_user.save!       
+      registered = User.find_by_username( user['username'] )           
+      msg = {success: "User #{user['username']} registered"}
+      return 200, registered.to_json 
     end
   else
+    puts "Role does not exists"
     msg = {error:"Role #{role} does not exist"}
-    return 404, msg.to_json
+    return 404, msg.to_json    
   end
 end
 

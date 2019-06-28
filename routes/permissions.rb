@@ -108,7 +108,7 @@ post '/endpoints' do
     puts request.env["HTTP_AUTHORIZATION"]
     decoded_token = decode_token(request.env["HTTP_AUTHORIZATION"])
     #STDERR.puts "decoded token=#{decoded_token}"
-    Tng::Gtk::Utils::Logger.debug(component:'permissions', operation:'create', message:"decoded token=#{decoded_token}")	
+    Tng::Gtk::Utils::Logger.debug(component:'permissions', operation:'create', message:'"decoded token=#{decoded_token}"')	
     decoded = decoded_token.to_json
     parsed = JSON.parse (decoded)
     decoded_username = parsed[0]['username']    

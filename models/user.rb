@@ -31,6 +31,7 @@
 ## partner consortium (www.5gtango.eu).
 # frozen_string_literal: true
 # encoding: utf-8
+require 'sinatra/activerecord'
 class User < ActiveRecord::Base
   self.primary_key = 'username'
   belongs_to :role, foreign_key: :role, primary_key: :role, autosave: true

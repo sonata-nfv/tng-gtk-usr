@@ -47,5 +47,6 @@ post "/login" do
 end
 
 delete "/login" do
+  return 204
 end
 

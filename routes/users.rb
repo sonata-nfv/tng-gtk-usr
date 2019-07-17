@@ -48,6 +48,11 @@ get '/users/:username' do
   @user.to_json
 end
 
+delete '/users/:username' do
+  @user = User.find_by_username(params[:username])
+  @user.delete
+end
+
 post '/users' do
 
   user = JSON.parse(request.body.read)

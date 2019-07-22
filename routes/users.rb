@@ -50,7 +50,14 @@ end
 
 delete '/users/:username' do
   @user = User.find_by_username(params[:username])
-  @user.delete
+  if params[:username] == "tango"
+    puts "tango user cannot be deleted"
+    msg = {error: "tango user cannot be deleted"}			
+    return 409, msg.to_json     
+  end  
+  if params[:username] != "tango"
+    @user.delete
+  end
 end
 
 post '/users' do

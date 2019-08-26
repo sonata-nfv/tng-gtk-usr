@@ -19,12 +19,8 @@
         "description": "Users Controller"
       },
       {
-        "name": "permissions",
+        "name": "endpoints",
         "description": "Permissions Controller"
-      },
-      {
-        "name": "roles",
-        "description": "Roles Controller"
       }
     ],
     "paths": {

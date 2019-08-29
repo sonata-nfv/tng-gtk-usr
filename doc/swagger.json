@@ -21,7 +21,11 @@
       {
         "name": "endpoints",
         "description": "Permissions Controller"
-      }
+      },
+      {
+        "name": "login",
+        "description": "Login Controller"
+      }      
     ],
     "paths": {
       "/users": {
@@ -119,11 +123,11 @@
     "/login": {
         "post": {
             "tags": [
-              "users"
+              "login"
             ],
-            "summary": "Register a new user",
-            "description": "Register a new user",
-            "operationId": "registerUsingPOST",
+            "summary": "Login a user",
+            "description": "Login a user",
+            "operationId": "loginUsingPOST",
             "consumes": [
               "application/json"
             ],

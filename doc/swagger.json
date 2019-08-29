@@ -1,5 +1,5 @@
 {
-    "swagger": "2.0",
+    "swagger": "3.0",
     "info": {
       "description": "Api Documentation",
       "version": "1.0",
@@ -21,8 +21,16 @@
       {
         "name": "endpoints",
         "description": "Permissions Controller"
+<<<<<<< HEAD
+      },
+      {
+        "name": "login",
+        "description": "Login Controller"
+      }      
+=======
       }
         
+>>>>>>> 23c809caaddf44ef31c6942500b8410a4b6b9239
     ],
     "paths": {
       "/users": {
@@ -120,11 +128,11 @@
     "/login": {
         "post": {
             "tags": [
-              "users"
+              "login"
             ],
-            "summary": "Register a new user",
-            "description": "Register a new user",
-            "operationId": "registerUsingPOST",
+            "summary": "Login a user",
+            "description": "Login a user",
+            "operationId": "loginUsingPOST",
             "consumes": [
               "application/json"
             ],

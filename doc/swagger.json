@@ -1,41 +1,133 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "description": "Api Documentation",
-      "version": "1.0",
-      "title": "Api Documentation",
-      "termsOfService": "urn:tos",
-      "contact": {},
-      "license": {
-        "name": "Apache 2.0",
-        "url": "http://www.apache.org/licenses/LICENSE-2.0"
-      }
+  "swagger": "2.0",
+  "info": {
+    "description": "Api Documentation",
+    "version": "1.0",
+    "title": "Api Documentation",
+    "termsOfService": "urn:tos",
+    "contact": {},
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "host": "pre-int-sp-ath.5gtango.eu:4567",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "users",
+      "description": "Users Controller"
     },
-    "host": "pre-int-sp-ath.5gtango.eu:4567",
-    "basePath": "/",
-    "tags": [
-      {
-        "name": "users",
-        "description": "Users Controller"
+    {
+      "name": "endpoints",
+      "description": "Permissions Controller"
+    },
+    {
+      "name": "login",
+      "description": "Login Controller"
+    }      
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Register a new user",
+        "description": "Register a new user",
+        "operationId": "onChangeUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+              "name": "username",
+              "in": "query",
+              "description": "username",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "name",
+              "in": "query",
+              "description": "name",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "password",
+              "in": "query",
+              "description": "password",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "email",
+              "in": "query",
+              "description": "email",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "role",
+              "in": "query",
+              "description": "role",
+              "required": true,
+              "type": "string"
+            }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+              "description": "Conflict"
+            },            
+          "500": {
+            "description": "Error in the registration process, "
+          }
+        }
       },
-      {
-        "name": "endpoints",
-        "description": "Permissions Controller"
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Retrieve all users",
+        "description": "Retrieve all users",
+        "operationId": "listAllUsersUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Error retieving users"
+          }
+        },
+        "deprecated": false
+
+      }
       },
-      {
-        "name": "login",
-        "description": "Login Controller"
-      }      
-    ],
-    "paths": {
-      "/users": {
-        "post": {
+
+  "/login": {
+      "post": {
           "tags": [
-            "users"
+            "login"
           ],
-          "summary": "Register a new user",
-          "description": "Register a new user",
-          "operationId": "onChangeUsingPOST",
+          "summary": "Login a user",
+          "description": "Login a user",
+          "operationId": "loginUsingPOST",
           "consumes": [
             "application/json"
           ],
@@ -46,6 +138,54 @@
             {
                 "name": "username",
                 "in": "query",
+                "description": "username",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "password",
+                "in": "query",
+                "description": "name",
+                "required": true,
+                "type": "string"
+              }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "409": {
+                "description": "Conflict"
+              },            
+            "500": {
+              "description": "Error in the registration process, "
+            }
+          }
+        }
+
+      },        
+
+    "/users/{user_name}": {
+      "patch": {
+          "tags": [
+            "users"
+          ],
+          "summary": "Update a user",
+          "description": "Update a new user",
+          "operationId": "updateUsingPATCH",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "*/*"
+          ],
+          "parameters": [
+            {
+                "name": "user_name",
+                "in": "path",
                 "description": "username",
                 "required": true,
                 "type": "string"
@@ -94,13 +234,100 @@
             }
           }
         },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Delete user",
+        "description": "user",
+        "operationId": "deleteUserUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+              "name": "user_name",
+              "in": "path",
+              "description": "username",
+              "required": true,
+              "type": "string"
+            }
+        ],         
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Error retieving users"
+          }
+        },
+        "deprecated": false
+
+      }   
+    },
+
+    "/endpoints": {
+      "post": {
+          "tags": [
+            "endpoints"
+          ],
+          "summary": "Register a new endpoint",
+          "description": "Register a new endpoint",
+          "operationId": "registerEndpointUsingPOST",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "*/*"
+          ],
+          "parameters": [
+            {
+                "name": "role",
+                "in": "query",
+                "description": "role",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "endpoint",
+                "in": "query",
+                "description": "endpoint",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "verbs",
+                "in": "query",
+                "description": "verbs",
+                "required": true,
+                "type": "string"
+              }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "409": {
+                "description": "Conflict"
+              },            
+            "500": {
+              "description": "Error in the registration process, "
+            }
+          }
+        },
         "get": {
           "tags": [
-            "users"
+            "endpoints"
           ],
-          "summary": "Retrieve all users",
-          "description": "Retrieve all users",
-          "operationId": "listAllUsersUsingGET",
+          "summary": "Retrieve all endpoints",
+          "description": "Retrieve all endpoints",
+          "operationId": "listAllEndpointsUsingGET",
           "produces": [
             "*/*"
           ],
@@ -118,236 +345,9 @@
           "deprecated": false
   
         }
-        },
 
-    "/login": {
-        "post": {
-            "tags": [
-              "login"
-            ],
-            "summary": "Login a user",
-            "description": "Login a user",
-            "operationId": "loginUsingPOST",
-            "consumes": [
-              "application/json"
-            ],
-            "produces": [
-              "*/*"
-            ],
-            "parameters": [
-              {
-                  "name": "username",
-                  "in": "query",
-                  "description": "username",
-                  "required": true,
-                  "type": "string"
-                },
-                {
-                  "name": "password",
-                  "in": "query",
-                  "description": "name",
-                  "required": true,
-                  "type": "string"
-                }
-            ],
-            "responses": {
-              "200": {
-                "description": "OK"
-              },
-              "400": {
-                "description": "Bad Request"
-              },
-              "409": {
-                  "description": "Conflict"
-                },            
-              "500": {
-                "description": "Error in the registration process, "
-              }
-            }
-          }
-
-        },        
-
-      "/users/{user_name}": {
-        "patch": {
-            "tags": [
-              "users"
-            ],
-            "summary": "Update a user",
-            "description": "Update a new user",
-            "operationId": "updateUsingPATCH",
-            "consumes": [
-              "application/json"
-            ],
-            "produces": [
-              "*/*"
-            ],
-            "parameters": [
-              {
-                  "name": "user_name",
-                  "in": "path",
-                  "description": "username",
-                  "required": true,
-                  "type": "string"
-                },
-                {
-                  "name": "name",
-                  "in": "query",
-                  "description": "name",
-                  "required": true,
-                  "type": "string"
-                },
-                {
-                  "name": "password",
-                  "in": "query",
-                  "description": "password",
-                  "required": true,
-                  "type": "string"
-                },
-                {
-                  "name": "email",
-                  "in": "query",
-                  "description": "email",
-                  "required": true,
-                  "type": "string"
-                },
-                {
-                  "name": "role",
-                  "in": "query",
-                  "description": "role",
-                  "required": true,
-                  "type": "string"
-                }
-            ],
-            "responses": {
-              "200": {
-                "description": "OK"
-              },
-              "400": {
-                "description": "Bad Request"
-              },
-              "409": {
-                  "description": "Conflict"
-                },            
-              "500": {
-                "description": "Error in the registration process, "
-              }
-            }
-          },
-        "delete": {
-          "tags": [
-            "users"
-          ],
-          "summary": "Delete user",
-          "description": "user",
-          "operationId": "deleteUserUsingDELETE",
-          "produces": [
-            "*/*"
-          ],
-          "parameters": [
-            {
-                "name": "user_name",
-                "in": "path",
-                "description": "username",
-                "required": true,
-                "type": "string"
-              }
-          ],         
-          "responses": {
-            "200": {
-              "description": "OK"
-            },
-            "400": {
-              "description": "Bad Request"
-            },
-            "500": {
-              "description": "Error retieving users"
-            }
-          },
-          "deprecated": false
-  
-        }   
-      },
-
-      "/endpoints": {
-        "post": {
-            "tags": [
-              "endpoints"
-            ],
-            "summary": "Register a new endpoint",
-            "description": "Register a new endpoint",
-            "operationId": "registerEndpointUsingPOST",
-            "consumes": [
-              "application/json"
-            ],
-            "produces": [
-              "*/*"
-            ],
-            "parameters": [
-              {
-                  "name": "role",
-                  "in": "query",
-                  "description": "role",
-                  "required": true,
-                  "type": "string"
-                },
-                {
-                  "name": "endpoint",
-                  "in": "query",
-                  "description": "endpoint",
-                  "required": true,
-                  "type": "string"
-                },
-                {
-                  "name": "verbs",
-                  "in": "query",
-                  "description": "verbs",
-                  "required": true,
-                  "type": "string"
-                }
-            ],
-            "responses": {
-              "200": {
-                "description": "OK"
-              },
-              "400": {
-                "description": "Bad Request"
-              },
-              "409": {
-                  "description": "Conflict"
-                },            
-              "500": {
-                "description": "Error in the registration process, "
-              }
-            }
-          },
-          "get": {
-            "tags": [
-              "endpoints"
-            ],
-            "summary": "Retrieve all endpoints",
-            "description": "Retrieve all endpoints",
-            "operationId": "listAllEndpointsUsingGET",
-            "produces": [
-              "*/*"
-            ],
-            "responses": {
-              "200": {
-                "description": "OK"
-              },
-              "400": {
-                "description": "Bad Request"
-              },
-              "500": {
-                "description": "Error retieving users"
-              }
-            },
-            "deprecated": false
-    
-          }
-
-      }
-  
     }
-  
+
   }
+
+}

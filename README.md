@@ -10,7 +10,7 @@ Please see [details on the overall 5GTANGO architecture here](https://5gtango.eu
 
 This si designed to be used with dockers. Using the Dockerfile you can build and run the container. It will connect to he postgresql DB of the tango project (son-postgress container).
 
-Once done, you will have the api available at http://tng-gtk-usr:4567 with this endpoints:
+Once done, you will have the api available at http://tng-gtk-usr:4567 with the following endpoints:
 
 ## /users
 GET

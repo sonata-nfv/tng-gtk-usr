@@ -1,4 +1,4 @@
-# tng-gtk-usr
+[![Build Status](http://jenkins.sonata-nfv.eu/buildStatus/icon?job=tng-gtk-usr/master)](http://jenkins.sonata-nfv.eu/job/son-monitor-pipeline/master)[![Join the chat at https://gitter.im/sonata-nfv/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sonata-nfv/Lobby) 
 <p align="center"><img src="https://github.com/sonata-nfv/tng-api-gtw/wiki/images/sonata-5gtango-logo-500px.png" /></p>
 
 # 5GTANGO API for the user management
@@ -97,4 +97,8 @@ For the versions available, see the [link to releases on this repository](/relea
 ## Licensing
 
 For licensing issues, please check the [Licence](https://github.com/sonata-nfv/tng-gtk-usr/blob/master/LICENSE) file.
+
+## Feedback-Channel
+* You may use the mailing list [sonata-dev-list](mailto:sonata-dev@lists.atosresearch.eu)
+* Gitter room [![Gitter](https://badges.gitter.im/sonata-nfv/Lobby.svg)](https://gitter.im/sonata-nfv/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 

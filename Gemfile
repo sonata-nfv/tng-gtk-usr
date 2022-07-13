@@ -39,7 +39,7 @@ gem 'sinatra', '2.0.2', require: 'sinatra/base'
 gem 'sinatra-contrib', '2.0.2', require: false
 
 gem 'pg', '0.21.0'
-gem 'activerecord', '5.2'
+gem 'activerecord', '5.2.8.1'
 gem 'sinatra-activerecord', '2.0.13'
 gem 'thin', '1.7.2'
 gem 'activerecord-rack', '1.0.0'
